@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Catálogo — Verdulería</title>
+<style>
+  :root {
+    --paper:      #F7F5EC;
+    --panel:      #FFFFFF;
+    --panel-2:    #EFEDE0;
+    --linea:      #DEDBC8;
+    --linea-f:    #C7C3A9;
+    --ink:        #1E2116;
+    --ink-2:      #5B5F4A;
+    --ink-3:      #8A8D72;
+    --acento:     #2F7D4F;
+    --acento-ink: #FFFFFF;
+    --acento-suave: #E3EEE2;
+    --fiesta:     #C97A2B;
+    --fiesta-suave: #F6E7D5;
+    --alerta:     #9B3D24;
+    --alerta-suave: #F8E5DE;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --r: 12px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #12140F; --panel: #1A1D14; --panel-2: #21251A;
+      --linea: #33392A; --linea-f: #454B34;
+      --ink: #EFEDE2; --ink-2: #A9AD95; --ink-3: #767A63;
+      --acento: #6FBE86; --acento-ink: #0F1E11; --acento-suave: #1D2A1B;
+      --fiesta: #E3A24C; --fiesta-suave: #2E230F;
+      --alerta: #E08160; --alerta-suave: #331A11;
+      color-scheme: dark;
+    }
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--sans); font-size: 16px; line-height: 1.4;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .app {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    max-width: 560px; margin: 0 auto;
+    background: var(--paper);
+  }
+
+  /* ─────────── barra de progreso ─────────── */
+
+  .progreso { flex: 0 0 auto; height: 5px; background: var(--panel-2); }
+  .progreso i {
+    display: block; height: 100%; width: 0%;
+    background: var(--acento);
+    transition: width 0.35s ease;
+  }
+
+  .cabecera {
+    flex: 0 0 auto;
+    display: flex; align-items: center; gap: 10px;
+    padding: 14px 20px 10px;
+    min-height: 30px;
+  }
+  .cabecera .volver {
+    font: inherit; font-size: 14px; font-weight: 600;
+    padding: 6px 4px; border: 0; background: transparent; color: var(--ink-2);
+    cursor: pointer; flex: 0 0 auto;
+  }
+  .cabecera .volver:hover { color: var(--ink); }
+  .cabecera .cuenta {
+    margin-left: auto; flex: 0 0 auto;
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 13px; color: var(--ink-3); white-space: nowrap;
+  }
+  .cabecera .tally {
+    font-size: 12px; color: var(--ink-3); flex: 0 0 auto; white-space: nowrap;
+  }
+
+  .zona {
+    flex: 1 1 auto; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding: 4px 20px 24px;
+    display: flex; flex-direction: column;
+  }
+
+  /* ─────────── tarjeta central (bienvenida / producto / terminado) ─────────── */
+
+  .tarjeta {
+    flex: 1 1 auto;
+    display: flex; flex-direction: column;
+    animation: entra 0.22s ease;
+  }
+  @media (prefers-reduced-motion: reduce) { .tarjeta { animation: none; } }
+  @keyframes entra {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-3);
+    margin: 6px 0 4px;
+  }
+  h1.titulo {
+    margin: 0 0 8px; font-size: 26px; font-weight: 750;
+    letter-spacing: -0.015em; text-wrap: balance;
+  }
+  p.sub {
+    margin: 0 0 22px; font-size: 15px; color: var(--ink-2); line-height: 1.55;
+    max-width: 34ch;
+  }
+
+  /* ─────────── bienvenida / terminado ─────────── */
+
+  .centro {
+    flex: 1 1 auto; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 20px 0 8px;
+  }
+  .centro .icono {
+    width: 72px; height: 72px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 34px; background: var(--acento-suave); margin-bottom: 18px;
+  }
+  .centro h1.titulo { font-size: 28px; }
+  .centro p.sub { max-width: 30ch; }
+
+  .lista-pasos {
+    list-style: none; margin: 4px 0 0; padding: 0;
+    display: flex; flex-direction: column; gap: 10px;
+    width: 100%; max-width: 340px;
+  }
+  .lista-pasos li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 14px; color: var(--ink-2); text-align: left;
+  }
+  .lista-pasos .n {
+    flex: 0 0 auto; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--panel-2); color: var(--ink);
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+
+  /* ─────────── proveedores ─────────── */
+
+  .filaProv {
+    display: flex; gap: 8px; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid var(--linea);
+  }
+  .filaProv input {
+    font: inherit; padding: 11px 10px; min-height: 46px; min-width: 0;
+    border: 1px solid var(--linea-f); border-radius: var(--r);
+    background: var(--panel); color: var(--ink);
+  }
+  .filaProv .campoNombre { flex: 1 1 auto; font-size: 15px; font-weight: 600; }
+  .filaProv .campoTel { flex: 0 1 104px; font-family: var(--mono); font-size: 13.5px; }
+  .filaProv .quitar {
+    flex: 0 0 auto; width: 34px; height: 34px;
+    border: 0; border-radius: 50%; background: transparent;
+    color: var(--ink-3); font-size: 18px; cursor: pointer;
+  }
+  .filaProv .quitar:hover { background: var(--alerta-suave); color: var(--alerta); }
+
+  .agregarProv {
+    font: inherit; font-size: 14.5px; font-weight: 650;
+    padding: 12px; margin-top: 12px; width: 100%;
+    border: 1.5px dashed var(--linea-f); border-radius: var(--r);
+    background: transparent; color: var(--ink-2); cursor: pointer;
+  }
+  .agregarProv:hover { border-color: var(--acento); color: var(--acento); }
+
+  .avisoProv {
+    margin-top: 14px; font-size: 13px; color: var(--alerta);
+    display: none;
+  }
+  .avisoProv.on { display: block; }
+
+  /* ─────────── pregunta de producto ─────────── */
+
+  .grupo { margin-bottom: 26px; }
+  .grupoRot {
+    font-size: 14px; font-weight: 650; color: var(--ink); margin-bottom: 10px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font: inherit; font-size: 14.5px; font-weight: 600;
+    padding: 11px 16px; min-height: 46px;
+    border: 1.5px solid var(--linea-f); border-radius: 999px;
+    background: var(--panel); color: var(--ink-2); cursor: pointer;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .chip:hover { border-color: var(--ink-3); color: var(--ink); }
+  .chip[aria-pressed="true"] {
+    background: var(--acento); border-color: var(--acento); color: var(--acento-ink);
+  }
+  .chip .orden {
+    font-family: var(--mono); font-size: 11px; font-weight: 800;
+    background: color-mix(in srgb, var(--acento-ink) 25%, transparent);
+    border-radius: 50%; width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .chip.ninguno {
+    border-style: dashed; font-weight: 550;
+  }
+  .chip.ninguno[aria-pressed="true"] {
+    background: var(--panel-2); border-color: var(--linea-f); color: var(--ink);
+  }
+
+  .revisarWrap {
+    display: flex; align-items: center; gap: 9px;
+    padding: 12px 14px; border-radius: var(--r);
+    background: var(--panel-2); margin-top: 6px;
+  }
+  .revisarWrap input { width: 19px; height: 19px; accent-color: var(--fiesta); }
+  .revisarWrap label { font-size: 13.5px; color: var(--ink-2); }
+
+  /* ─────────── pie: navegación ─────────── */
+
+  .pie {
+    flex: 0 0 auto; display: flex; gap: 10px;
+    padding: 14px 20px; padding-bottom: max(14px, env(safe-area-inset-bottom));
+    background: var(--paper); border-top: 1px solid var(--linea);
+  }
+  .btn {
+    font: inherit; font-size: 15px; font-weight: 650;
+    padding: 14px 18px; min-height: 50px; border-radius: var(--r);
+    border: 1.5px solid var(--ink); background: var(--ink); color: var(--paper);
+    cursor: pointer; flex: 1 1 auto;
+  }
+  .btn:hover { opacity: 0.88; }
+  .btn:disabled { opacity: 0.35; cursor: default; }
+  .btn.secundario {
+    flex: 0 0 auto; background: transparent; color: var(--ink-2); border-color: var(--linea-f);
+  }
+  .btn.secundario:hover { color: var(--ink); border-color: var(--ink-3); opacity: 1; }
+  .btn.grande { font-size: 16.5px; padding: 16px 20px; min-height: 56px; }
+
+  /* ─────────── terminado ─────────── */
+
+  .resumen {
+    display: flex; gap: 8px; width: 100%; max-width: 340px; margin-top: 4px;
+  }
+  .resumen .caja {
+    flex: 1 1 0; padding: 12px 10px; border-radius: var(--r);
+    background: var(--panel-2); text-align: center;
+  }
+  .resumen .num {
+    display: block; font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 22px; font-weight: 800; color: var(--ink);
+  }
+  .resumen .rot { font-size: 10.5px; color: var(--ink-3); margin-top: 2px; }
+
+  .entrega {
+    width: 100%; max-width: 340px; margin-top: 26px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .entrega p {
+    font-size: 13.5px; color: var(--ink-2); text-align: left; margin: 0 0 4px;
+  }
+  .copiado {
+    font-size: 12.5px; color: var(--acento); font-weight: 650;
+    text-align: center; height: 16px; margin-top: -2px;
+  }
+
+  /* ─────────── toasts (milestone) ─────────── */
+
+  .toast {
+    position: absolute; top: 14px; left: 50%; transform: translateX(-50%) translateY(-8px);
+    background: var(--ink); color: var(--paper);
+    font-size: 13.5px; font-weight: 650;
+    padding: 10px 18px; border-radius: 999px;
+    opacity: 0; pointer-events: none; z-index: 5;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    white-space: nowrap;
+  }
+  .toast.on { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  a.enlace {
+    font: inherit; font-size: 14.5px; font-weight: 650;
+    color: var(--ink-2); text-decoration: underline; text-underline-offset: 2px;
+    background: none; border: 0; cursor: pointer; padding: 4px;
+  }
+  a.enlace:hover { color: var(--ink); }
+
+  :is(button, input, a):focus-visible {
+    outline: 2px solid var(--acento); outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="app" id="app"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var PLURAL = {
+    unidad: ["unidad","unidades"], docena: ["docena","docenas"],
+    atado: ["atado","atados"], paquete: ["paquete","paquetes"],
+    cajon: ["cajón","cajones"], plancha: ["plancha","planchas"],
+    bolsa: ["bolsa","bolsas"], malla: ["malla","mallas"], kilo: ["kilo","kilos"]
+  };
+  var UNIDADES = ["atado","docena","unidad","paquete","cajon","plancha","bolsa","malla","kilo"];
+
+  // [nombre, unidad sugerida] — catálogo completo, tal cual lo tiene Nico hoy.
+  // El orden acá no importa: se muestra alfabético.
+  var CATALOGO = [
+    ["ACELGA","atado"],["ACELGA LAVADA","paquete"],["ESPINACA","atado"],
+    ["ESPINACA LAVADA","paquete"],["LECHUGA MANTECA","docena"],["LECHUGA CRESPA","docena"],
+    ["LECHUGA MORADA","docena"],["LECHUGA ESCAROLA","docena"],["LECHUGA CAPUCHINA","docena"],
+    ["RUCULA","atado"],["BERRO","docena"],["KALE","atado"],["MIZUNA","atado"],
+    ["MICROGREENS","paquete"],["VERDURA BABY","bolsa"],["HONGOS","kilo"],
+    ["APIO","docena"],["APIO PLANTA","unidad"],["PUERRO","atado"],["CEBOLLA VERDEO","atado"],
+    ["CEBOLLIN","atado"],["NABO","atado"],["RABANITO","atado"],["BROCOLI","docena"],
+    ["COLIFLOR","unidad"],["REPOLLO BLANCO","unidad"],["REPOLLO ROJO","unidad"],
+    ["REPOLLO CRESPO","unidad"],["REPOLLO BRUSELA","kilo"],["PEREJIL","atado"],
+    ["CILANTRO","atado"],["ALBAHACA","atado"],["MENTA","atado"],["CIBOULET","atado"],
+    ["ENELDO","atado"],["ROMERO","paquete"],["TOMILLO","paquete"],["OREGANO","paquete"],
+    ["LAUREL","paquete"],["SALVIA","paquete"],["HINOJO","unidad"],
+    ["TOMATE ESPECIAL","plancha"],["TOMATE MEDIANO","plancha"],["TOMATE CHICO","plancha"],
+    ["TOMATE PERITA","plancha"],["CHERRY","cajon"],["CHERRY PERITA","cajon"],
+    ["CHERRY AMARILLO","cajon"],["CHERRY MORADO","cajon"],["MORRON ROJO","cajon"],
+    ["MORRON VERDE","cajon"],["MORRON AMARILLO","cajon"],["CATALAN DULCE","plancha"],
+    ["CATALAN PICANTE","plancha"],["CATALAN JALAPEÑO","plancha"],["BERENGENA","cajon"],
+    ["ZAPALLITO","cajon"],["ZUCHINI","cajon"],["PEPINO","cajon"],["PEPINILLO","kilo"],
+    ["CHAUCHA VERDE","cajon"],["CHAUCHA ALUBIA","cajon"],["CHAUCHA AMARILLA","cajon"],
+    ["HABAS","kilo"],["ARVEJA","kilo"],["CHOCLO","docena"],["PALTA","cajon"],
+    ["CALABAZIN","cajon"],["KABUTIA","unidad"],["PAPA BLANCA","bolsa"],["PAPA ROSADA","bolsa"],
+    ["PAPIN","bolsa"],["BONIATO CRIOLLO","cajon"],["BONIATO ZANAHORIA","cajon"],
+    ["CEBOLLA","bolsa"],["CEBOLLA MORADA","bolsa"],["AJO","unidad"],["ZANAHORIA","bolsa"],
+    ["ZANAHORIA CHICA","bolsa"],["REMOLACHA","atado"],["REMOLACHA COCIDA","paquete"],
+    ["JENGIBRE","kilo"],["CURCUMA","kilo"],["ANANA","unidad"],["BANANA BRASIL","cajon"],
+    ["BANANA ECUADOR","cajon"],["PLATANO MACHO","cajon"],["MANZANA VERDE","plancha"],
+    ["MANZANA VERDE CHICA","plancha"],["MANZANA FUJI ESPECIAL","plancha"],
+    ["MANZANA FUJI CHICA","plancha"],["MANZANA GALA ESPECIAL","plancha"],
+    ["MANZANA GALA CHICA","plancha"],["MANZANA PINK ESPECIAL","plancha"],
+    ["MANZANA PINK CHICA","plancha"],["MANZANA RDE","plancha"],["MANZANA RD1","plancha"],
+    ["MANZANA RD CHICA","plancha"],["PERA ESPECIAL","plancha"],["PERA MEDIANA","plancha"],
+    ["PERA CHICA","plancha"],["DURAZNO ESPECIAL","cajon"],["DURAZNO MEDIANO","cajon"],
+    ["DURAZNO CHICO","cajon"],["DURAZNO BLANCO","cajon"],["PELON BLANCO","cajon"],
+    ["PELON AMARILLO","cajon"],["PELON CHICO","cajon"],["CIRUELA AMARILLA","cajon"],
+    ["CIRUELA GRANDE","cajon"],["CIRUELA CHICA","cajon"],["DAMASCO","cajon"],
+    ["CEREZA","kilo"],["FRUTILLA ESPECIAL","cajon"],["FRUTILLA CHICA","cajon"],
+    ["ARANDANO","cajon"],["MORA","cajon"],["FRAMBUESA","cajon"],["HIGO","cajon"],
+    ["UVA BLANCA","cajon"],["UVA MOSCATEL","cajon"],["UVA RIVOL","cajon"],["UVA ROSADA","cajon"],
+    ["NARANJA OMBLIGO","cajon"],["NARANJA ESPECIAL","cajon"],["NARANJA MEDIANA JUGO","cajon"],
+    ["NARANJA CHICA MALLA","malla"],["MANDARINA ESPECIAL","cajon"],["MANDARINA MEDIANA","cajon"],
+    ["MANDARINA CHICA","cajon"],["LIMON","cajon"],["LIMA","cajon"],["MELON","unidad"],
+    ["SANDIA","unidad"],["SANDIA BABY","unidad"],["MANGO","unidad"],["PAPAYA","unidad"],
+    ["KAKI","cajon"],["MEMBRILLO","cajon"],["GRANADA","cajon"],["MARACUYA","kilo"],
+    ["QUINOTO","kilo"],["KIWI","cajon"],["FRUTA DRAGON","unidad"],["COCO","unidad"],
+    ["DATILES","kilo"],["CHAMPIGNON","kilo"],["BROTE SOJA","paquete"],["BROTE ALFALFA","paquete"],
+    ["CHOCLO COCIDO","unidad"],["MANI TOSTADO","kilo"]
+  ];
+
+  function sinTildes(s) {
+    return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  }
+
+  var ARTICULOS = CATALOGO.slice().sort(function (a, b) {
+    return sinTildes(a[0]) < sinTildes(b[0]) ? -1 : 1;
+  });
+
+  // ── persistencia ────────────────────────────────────────────────
+  var CLAVE = "vz_catalogo_v1";
+
+  function estadoVacio() {
+    return { paso: "bienvenida", proveedores: [], idx: 0, respuestas: {} };
+  }
+  function cargar() {
+    try {
+      var s = JSON.parse(localStorage.getItem(CLAVE));
+      if (s && s.paso) return s;
+    } catch (e) {}
+    return estadoVacio();
+  }
+  function guardar() {
+    try { localStorage.setItem(CLAVE, JSON.stringify(estado)); } catch (e) {}
+  }
+
+  var estado = cargar();
+  var retomando = estado.paso !== "bienvenida";
+
+  function nuevoProveedor() {
+    return { id: "p" + Date.now() + Math.floor(Math.random() * 1000), nombre: "", tel: "" };
+  }
+  if (!estado.proveedores.length) estado.proveedores.push(nuevoProveedor());
+
+  function respuestaDe(nombreArt) {
+    var r = estado.respuestas[nombreArt];
+    if (!r) {
+      var base = ARTICULOS.filter(function (a) { return a[0] === nombreArt; })[0];
+      r = { unidad: base ? base[1] : "unidad", provs: [], revisar: false };
+      estado.respuestas[nombreArt] = r;
+    }
+    return r;
+  }
+
+  function proveedorPorId(id) {
+    for (var i = 0; i < estado.proveedores.length; i++) {
+      if (estado.proveedores[i].id === id) return estado.proveedores[i];
+    }
+    return null;
+  }
+
+  // ── helpers de armado ────────────────────────────────────────────
+  function el(tag, clase, texto) {
+    var n = document.createElement(tag);
+    if (clase) n.className = clase;
+    if (texto != null) n.textContent = texto;
+    return n;
+  }
+
+  var app = document.getElementById("app");
+  var toastTimer = null;
+
+  function mostrarToast(msg) {
+    var t = document.getElementById("toast");
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add("on");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.classList.remove("on"); }, 2200);
+  }
+
+  // ── pantalla: bienvenida ────────────────────────────────────────
+  function pantallaBienvenida() {
+    var p = el("div", "zona");
+    var t = el("div", "tarjeta centro");
+    t.appendChild(el("div", "icono", "🥬"));
+    t.appendChild(el("h1", "titulo", "El catálogo de la verdulería"));
+    t.appendChild(el("p", "sub",
+      "Antes de armar los pedidos en la aplicación nueva, necesitamos dos " +
+      "cosas tuyas: a quién le compra cada cosa, y en qué unidad se vende."));
+
+    var pasos = el("ul", "lista-pasos");
+    [
+      "Primero anotás los proveedores: nombre y teléfono.",
+      "Después vas artículo por artículo, uno por pantalla.",
+      "Se guarda solo. Podés cerrar cuando quieras y seguís después."
+    ].forEach(function (texto, i) {
+      var li = el("li");
+      li.appendChild(el("span", "n", String(i + 1)));
+      li.appendChild(el("span", null, texto));
+      pasos.appendChild(li);
+    });
+    t.appendChild(pasos);
+    p.appendChild(t);
+    app.appendChild(p);
+
+    var pie = el("div", "pie");
+    var b = el("button", "btn grande", "Empezar");
+    b.type = "button";
+    b.addEventListener("click", function () {
+      estado.paso = "proveedores";
+      guardar();
+      render();
+    });
+    pie.appendChild(b);
+    app.appendChild(pie);
+  }
+
+  // ── pantalla: proveedores ───────────────────────────────────────
+  function pantallaProveedores() {
+    cabecera(null, null);
+
+    var p = el("div", "zona");
+    var t = el("div", "tarjeta");
+    t.appendChild(el("div", "eyebrow", "Paso 1 de 2"));
+    t.appendChild(el("h1", "titulo", "¿A quién le compra?"));
+    t.appendChild(el("p", "sub",
+      "Poné el nombre como lo conocés vos (\"el Ruso\", \"Perdomo\") y el teléfono si lo tenés a mano."));
+
+    var lista = el("div", "listaProv");
+    function pintarFilas() {
+      lista.textContent = "";
+      estado.proveedores.forEach(function (pr) {
+        var f = el("div", "filaProv");
+
+        var inpN = el("input", "campoNombre");
+        inpN.type = "text";
+        inpN.placeholder = "Nombre del proveedor";
+        inpN.value = pr.nombre;
+        inpN.setAttribute("aria-label", "Nombre del proveedor");
+        inpN.addEventListener("input", function () { pr.nombre = inpN.value; guardar(); });
+
+        var inpT = el("input", "campoTel");
+        inpT.type = "tel";
+        inpT.placeholder = "Teléfono";
+        inpT.value = pr.tel;
+        inpT.setAttribute("aria-label", "Teléfono de " + (pr.nombre || "este proveedor"));
+        inpT.addEventListener("input", function () { pr.tel = inpT.value; guardar(); });
+
+        var x = el("button", "quitar", "×");
+        x.type = "button";
+        x.setAttribute("aria-label", "Quitar este proveedor");
+        x.addEventListener("click", function () {
+          estado.proveedores = estado.proveedores.filter(function (o) { return o.id !== pr.id; });
+          if (!estado.proveedores.length) estado.proveedores.push(nuevoProveedor());
+          guardar();
+          pintarFilas();
+        });
+
+        f.appendChild(inpN); f.appendChild(inpT); f.appendChild(x);
+        lista.appendChild(f);
+      });
+    }
+    pintarFilas();
+    t.appendChild(lista);
+
+    var agregar = el("button", "agregarProv", "+ Agregar otro proveedor");
+    agregar.type = "button";
+    agregar.addEventListener("click", function () {
+      estado.proveedores.push(nuevoProveedor());
+      guardar();
+      pintarFilas();
+      var inputs = lista.querySelectorAll(".campoNombre");
+      inputs[inputs.length - 1].focus();
+    });
+    t.appendChild(agregar);
+
+    var aviso = el("div", "avisoProv", "Agregá al menos un proveedor con nombre para continuar.");
+    t.appendChild(aviso);
+
+    p.appendChild(t);
+    app.appendChild(p);
+
+    var pie = el("div", "pie");
+    var b = el("button", "btn grande", "Continuar a los artículos");
+    b.type = "button";
+    b.addEventListener("click", function () {
+      var validos = estado.proveedores.filter(function (pr) { return pr.nombre.trim(); });
+      if (!validos.length) { aviso.classList.add("on"); return; }
+      estado.paso = "productos";
+      guardar();
+      render();
+    });
+    pie.appendChild(b);
+    app.appendChild(pie);
+  }
+
+  // ── pantalla: un artículo ───────────────────────────────────────
+  function pantallaProducto() {
+    var art = ARTICULOS[estado.idx];
+    var nombre = art[0];
+    var r = respuestaDe(nombre);
+
+    cabecera(
+      estado.idx + 1 + " de " + ARTICULOS.length,
+      contarHechos() + " listos"
+    );
+
+    var p = el("div", "zona");
+    var t = el("div", "tarjeta");
+    t.appendChild(el("h1", "titulo", nombre));
+
+    // ── unidad
+    var g1 = el("div", "grupo");
+    g1.appendChild(el("div", "grupoRot", "¿En qué se vende?"));
+    var chips1 = el("div", "chips");
+    UNIDADES.forEach(function (u) {
+      var c = el("button", "chip", PLURAL[u][0]);
+      c.type = "button";
+      c.setAttribute("aria-pressed", String(r.unidad === u));
+      c.addEventListener("click", function () {
+        r.unidad = u;
+        guardar();
+        Array.prototype.forEach.call(chips1.children, function (ch, i) {
+          ch.setAttribute("aria-pressed", String(UNIDADES[i] === u));
+        });
+      });
+      chips1.appendChild(c);
+    });
+    g1.appendChild(chips1);
+    t.appendChild(g1);
+
+    // ── proveedores (orden de toque = orden de preferencia)
+    var g2 = el("div", "grupo");
+    g2.appendChild(el("div", "grupoRot", "¿A quién se lo compra?"));
+    var chips2 = el("div", "chips");
+
+    function pintarChipsProv() {
+      chips2.textContent = "";
+      estado.proveedores.filter(function (pr) { return pr.nombre.trim(); }).forEach(function (pr) {
+        var elegido = r.provs.indexOf(pr.id) > -1;
+        var c = el("button", "chip");
+        c.type = "button";
+        c.setAttribute("aria-pressed", String(elegido));
+        if (elegido) {
+          var badge = el("span", "orden", String(r.provs.indexOf(pr.id) + 1));
+          c.appendChild(badge);
+        }
+        c.appendChild(document.createTextNode(pr.nombre));
+        c.addEventListener("click", function () {
+          if (elegido) {
+            r.provs = r.provs.filter(function (id) { return id !== pr.id; });
+          } else {
+            r.provs.push(pr.id);
+          }
+          guardar();
+          pintarChipsProv();
+        });
+        chips2.appendChild(c);
+      });
+
+      var ninguno = el("button", "chip ninguno", "Todavía no sé");
+      ninguno.type = "button";
+      ninguno.setAttribute("aria-pressed", String(r.provs.length === 0));
+      ninguno.addEventListener("click", function () {
+        r.provs = [];
+        guardar();
+        pintarChipsProv();
+      });
+      chips2.appendChild(ninguno);
+    }
+    pintarChipsProv();
+    g2.appendChild(chips2);
+    t.appendChild(g2);
+
+    // ── marcar para revisar
+    var rev = el("div", "revisarWrap");
+    var chk = el("input");
+    chk.type = "checkbox";
+    chk.id = "revisar-" + estado.idx;
+    chk.checked = !!r.revisar;
+    chk.addEventListener("change", function () { r.revisar = chk.checked; guardar(); });
+    var lbl = el("label", null, "No estoy segura de esta respuesta, revisarla después");
+    lbl.setAttribute("for", chk.id);
+    rev.appendChild(chk); rev.appendChild(lbl);
+    t.appendChild(rev);
+
+    p.appendChild(t);
+    app.appendChild(p);
+
+    // ── pie: anterior / siguiente
+    var pie = el("div", "pie");
+    var atras = el("button", "btn secundario", "‹ Anterior");
+    atras.type = "button";
+    atras.disabled = estado.idx === 0;
+    atras.addEventListener("click", function () {
+      if (estado.idx === 0) { estado.paso = "proveedores"; }
+      else { estado.idx--; }
+      guardar();
+      render();
+    });
+    pie.appendChild(atras);
+
+    var sig = el("button", "btn grande",
+      estado.idx === ARTICULOS.length - 1 ? "Terminar" : "Siguiente ›");
+    sig.type = "button";
+    sig.addEventListener("click", function () {
+      if (estado.idx === ARTICULOS.length - 1) {
+        estado.paso = "terminado";
+      } else {
+        estado.idx++;
+        var pct = Math.round((estado.idx / ARTICULOS.length) * 100);
+        if (pct === 25) mostrarToast("¡Vamos, 25%!");
+        else if (pct === 50) mostrarToast("Mitad de camino 🙌");
+        else if (pct === 75) mostrarToast("Ya casi terminás");
+      }
+      guardar();
+      render();
+    });
+    pie.appendChild(sig);
+    app.appendChild(pie);
+  }
+
+  function contarHechos() {
+    return ARTICULOS.slice(0, estado.idx).filter(function (a) {
+      var r = estado.respuestas[a[0]];
+      return r && !r.revisar;
+    }).length;
+  }
+
+  // ── pantalla: terminado ──────────────────────────────────────────
+  function pantallaTerminado() {
+    var p = el("div", "zona");
+    var t = el("div", "tarjeta centro");
+    t.appendChild(el("div", "icono", "✅"));
+    t.appendChild(el("h1", "titulo", "¡Listo, gracias!"));
+    t.appendChild(el("p", "sub", "Ahora descargá el archivo y enviáselo a Nico."));
+
+    var conProv = ARTICULOS.filter(function (a) { return respuestaDe(a[0]).provs.length > 0; }).length;
+    var revisar = ARTICULOS.filter(function (a) { return respuestaDe(a[0]).revisar; }).length;
+
+    var res = el("div", "resumen");
+    function caja(n, rot) {
+      var c = el("div", "caja");
+      c.appendChild(el("span", "num", String(n)));
+      c.appendChild(el("span", "rot", rot));
+      return c;
+    }
+    res.appendChild(caja(estado.proveedores.filter(function (pr) { return pr.nombre.trim(); }).length, "Proveedores"));
+    res.appendChild(caja(ARTICULOS.length, "Artículos"));
+    res.appendChild(caja(revisar, "Para revisar"));
+    t.appendChild(res);
+
+    var entrega = el("div", "entrega");
+
+    var bDesc = el("button", "btn grande", "Descargar el archivo");
+    bDesc.type = "button";
+    bDesc.addEventListener("click", function () { descargarCSV(); });
+    entrega.appendChild(bDesc);
+
+    var pMail = el("p", null, "Después, mandaselo a Nico por mail o WhatsApp:");
+    entrega.appendChild(pMail);
+
+    var mail = document.createElement("a");
+    mail.className = "btn secundario";
+    mail.textContent = "Abrir mail para Nico";
+    mail.href = "mailto:info@estudiozen.com?subject=" +
+      encodeURIComponent("Catálogo completado - Verdulería") +
+      "&body=" + encodeURIComponent(
+        "Hola Nico! Te mando el archivo con los proveedores y los artículos. " +
+        "Lo adjunto acá (se descargó como catalogo-verduleria.csv)."
+      );
+    entrega.appendChild(mail);
+
+    var bCopiar = el("button", "btn secundario", "O copiar todo para pegar en WhatsApp");
+    bCopiar.type = "button";
+    var msgCopiado = el("div", "copiado");
+    bCopiar.addEventListener("click", function () {
+      var texto = generarCSV();
+      function marcarCopiado() {
+        msgCopiado.textContent = "Copiado ✓";
+        setTimeout(function () { msgCopiado.textContent = ""; }, 2500);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(marcarCopiado).catch(function () {
+          copiarConTextarea(texto); marcarCopiado();
+        });
+      } else {
+        copiarConTextarea(texto); marcarCopiado();
+      }
+    });
+    entrega.appendChild(bCopiar);
+    entrega.appendChild(msgCopiado);
+
+    var reiniciar = document.createElement("a");
+    reiniciar.className = "enlace";
+    reiniciar.textContent = "Empezar de nuevo desde cero";
+    reiniciar.style.marginTop = "18px";
+    reiniciar.href = "#";
+    reiniciar.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (window.confirm("¿Borrar todas las respuestas y empezar de nuevo?")) {
+        estado = estadoVacio();
+        estado.proveedores.push(nuevoProveedor());
+        guardar();
+        render();
+      }
+    });
+    entrega.appendChild(reiniciar);
+
+    t.appendChild(entrega);
+    p.appendChild(t);
+    app.appendChild(p);
+  }
+
+  function copiarConTextarea(texto) {
+    var ta = document.createElement("textarea");
+    ta.value = texto;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  // ── CSV ───────────────────────────────────────────────────────────
+  function csvCampo(v) {
+    v = String(v == null ? "" : v);
+    if (/[",\n]/.test(v)) return '"' + v.replace(/"/g, '""') + '"';
+    return v;
+  }
+
+  function generarCSV() {
+    var out = [];
+    out.push("PROVEEDORES");
+    out.push(["nombre", "telefono"].join(","));
+    estado.proveedores.filter(function (pr) { return pr.nombre.trim(); }).forEach(function (pr) {
+      out.push([csvCampo(pr.nombre.trim()), csvCampo(pr.tel.trim())].join(","));
+    });
+    out.push("");
+    out.push("ARTICULOS");
+    out.push(["articulo", "unidad", "proveedores_en_orden", "revisar"].join(","));
+    ARTICULOS.forEach(function (a) {
+      var r = respuestaDe(a[0]);
+      var nombresProv = r.provs.map(proveedorPorId).filter(Boolean).map(function (pr) { return pr.nombre; });
+      out.push([
+        csvCampo(a[0]),
+        csvCampo(r.unidad),
+        csvCampo(nombresProv.join("|")),
+        csvCampo(r.revisar ? "SI" : "")
+      ].join(","));
+    });
+    return out.join("\n");
+  }
+
+  function descargarCSV() {
+    var csv = generarCSV();
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "catalogo-verduleria.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  }
+
+  // ── cabecera compartida (progreso + volver + contador) ───────────
+  function cabecera(cuentaTxt, tallyTxt) {
+    var barra = el("div", "progreso");
+    var i = el("i");
+    var pct = estado.paso === "productos" ? (estado.idx / ARTICULOS.length) * 100
+            : estado.paso === "terminado" ? 100 : 0;
+    i.style.width = pct + "%";
+    barra.appendChild(i);
+    app.appendChild(barra);
+
+    var toast = el("div", "toast");
+    toast.id = "toast";
+    app.appendChild(toast);
+
+    var cab = el("div", "cabecera");
+    if (estado.paso === "productos" || estado.paso === "proveedores") {
+      var vinculo = document.createElement("button");
+      vinculo.type = "button";
+      vinculo.className = "volver";
+      if (estado.paso === "productos") {
+        vinculo.textContent = "Proveedores";
+        vinculo.addEventListener("click", function () {
+          estado.paso = "proveedores"; guardar(); render();
+        });
+      } else {
+        vinculo.textContent = "";
+      }
+      if (vinculo.textContent) cab.appendChild(vinculo);
+    }
+    if (tallyTxt) cab.appendChild(el("span", "tally", tallyTxt));
+    if (cuentaTxt) cab.appendChild(el("span", "cuenta", cuentaTxt));
+    app.appendChild(cab);
+  }
+
+  // ── render ────────────────────────────────────────────────────────
+  function render() {
+    app.textContent = "";
+    if (estado.paso === "bienvenida") pantallaBienvenida();
+    else if (estado.paso === "proveedores") pantallaProveedores();
+    else if (estado.paso === "productos") pantallaProducto();
+    else pantallaTerminado();
+  }
+
+  render();
+  if (retomando && estado.paso === "productos") {
+    setTimeout(function () { mostrarToast("Retomamos donde quedaste"); }, 300);
+  }
+})();
+</script>
+</body>
+</html>
