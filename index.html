@@ -1,0 +1,2919 @@
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Verdulería — V1</title>
+
+<style>
+  :root {
+    --papel:       #F6F7F3;
+    --panel:       #FFFFFF;
+    --panel-2:     #EFF1EB;
+    --linea:       #DDE1D8;
+    --linea-fuerte:#C3C9BC;
+    --tinta:       #171C15;
+    --tinta-2:     #565D53;
+    --tinta-3:     #7A8175;
+    --acento:      #9A6410;
+    --acento-tinta:#7A4E08;
+    --acento-suave:#F5E9D2;
+    --ajeno:       #2F5C7A;
+    --ajeno-suave: #E4EDF4;
+    --alerta:      #9B3D24;
+    --alerta-suave:#F8E5DE;
+    --ok:          #3D6B37;
+
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --r: 7px;
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --papel: #0F120E; --panel: #171B15; --panel-2: #1F241D;
+      --linea: #2E352C; --linea-fuerte: #434B3F;
+      --tinta: #EDEFE9; --tinta-2: #A6ADA0; --tinta-3: #838A7D;
+      --acento: #E0A040; --acento-tinta: #F0BE73; --acento-suave: #33280F;
+      --ajeno: #83B7D8; --ajeno-suave: #16272F;
+      --alerta: #E08160; --alerta-suave: #331A11;
+      --ok: #86B575;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --papel: #0F120E; --panel: #171B15; --panel-2: #1F241D;
+    --linea: #2E352C; --linea-fuerte: #434B3F;
+    --tinta: #EDEFE9; --tinta-2: #A6ADA0; --tinta-3: #838A7D;
+    --acento: #E0A040; --acento-tinta: #F0BE73; --acento-suave: #33280F;
+    --ajeno: #83B7D8; --ajeno-suave: #16272F;
+    --alerta: #E08160; --alerta-suave: #331A11;
+    --ok: #86B575;
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --papel: #F6F7F3; --panel: #FFFFFF; --panel-2: #EFF1EB;
+    --linea: #DDE1D8; --linea-fuerte: #C3C9BC;
+    --tinta: #171C15; --tinta-2: #565D53; --tinta-3: #7A8175;
+    --acento: #9A6410; --acento-tinta: #7A4E08; --acento-suave: #F5E9D2;
+    --ajeno: #2F5C7A; --ajeno-suave: #E4EDF4;
+    --alerta: #9B3D24; --alerta-suave: #F8E5DE;
+    --ok: #3D6B37;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+
+  .app {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    background: var(--papel); color: var(--tinta);
+    font-family: var(--sans); font-size: 15px; line-height: 1.35;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* ─────────── selector de rol (solo del mockup) ─────────── */
+
+  .roles {
+    flex: 0 0 auto;
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 16px;
+    background: var(--tinta); color: var(--papel);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .roles::-webkit-scrollbar { display: none; }
+  .roles .lbl {
+    flex: 0 0 auto;
+    font-family: var(--mono); font-size: 9.5px;
+    text-transform: uppercase; letter-spacing: 0.11em;
+    opacity: 0.55;
+  }
+  .roles button {
+    flex: 0 0 auto;
+    font: inherit; font-size: 13px; font-weight: 550;
+    padding: 6px 12px; min-height: 34px;
+    border: 1px solid color-mix(in srgb, var(--papel) 30%, transparent);
+    border-radius: var(--r);
+    background: transparent; color: inherit;
+    cursor: pointer; white-space: nowrap; opacity: 0.75;
+  }
+  .roles button:hover { opacity: 1; }
+  .roles button[aria-pressed="true"] {
+    background: var(--papel); color: var(--tinta);
+    border-color: var(--papel); opacity: 1;
+  }
+
+  /* ─────────── pantallas del tío ─────────── */
+
+  .subnav {
+    flex: 0 0 auto;
+    display: flex; gap: 0;
+    padding: 0 16px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--linea-fuerte);
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .subnav::-webkit-scrollbar { display: none; }
+  .subnav button {
+    flex: 0 0 auto;
+    font: inherit; font-size: 13.5px; font-weight: 600;
+    padding: 10px 14px; min-height: 42px;
+    border: 0; border-bottom: 2px solid transparent;
+    background: transparent; color: var(--tinta-3);
+    cursor: pointer; white-space: nowrap;
+  }
+  .subnav button:hover { color: var(--tinta); }
+  .subnav button[aria-pressed="true"] {
+    color: var(--tinta); border-bottom-color: var(--acento);
+  }
+
+  .pantalla { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+
+  /* ─────────── barra superior ─────────── */
+
+  .top { flex: 0 0 auto; background: var(--panel); border-bottom: 1px solid var(--linea-fuerte); }
+
+  .viaje {
+    display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px;
+    padding: 11px 16px 9px;
+  }
+  .viaje h1 { margin: 0; font-size: 17px; font-weight: 650; letter-spacing: -0.01em; }
+  .viaje h1 .dia { color: var(--tinta-2); font-weight: 500; }
+  .estado {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.09em;
+    padding: 3px 7px; border-radius: 4px;
+    background: var(--acento-suave); color: var(--acento-tinta);
+  }
+  .quien { margin-left: auto; font-size: 12.5px; color: var(--tinta-2); }
+  .quien b { font-weight: 650; color: var(--tinta); }
+
+  .senales { display: flex; flex-wrap: wrap; border-top: 1px solid var(--linea); background: var(--panel-2); }
+  .senal { flex: 1 1 220px; padding: 8px 16px; border-right: 1px solid var(--linea); min-width: 0; }
+  .senal:last-child { border-right: 0; }
+  .senal .rot {
+    display: block; font-family: var(--mono); font-size: 9.5px;
+    text-transform: uppercase; letter-spacing: 0.11em;
+    color: var(--tinta-3); margin-bottom: 2px;
+  }
+  .senal .val {
+    display: block; font-size: 13px; font-weight: 550;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .senal .val b { font-weight: 680; }
+  .senal.vieja { background: var(--alerta-suave); }
+  .senal.vieja .val { color: var(--alerta); }
+
+  /* ─────────── agrupar por ─────────── */
+
+  .controles {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 16px; border-top: 1px solid var(--linea);
+  }
+  .rotOrden {
+    flex: 0 0 auto; font-family: var(--mono); font-size: 9.5px;
+    text-transform: uppercase; letter-spacing: 0.11em; color: var(--tinta-3);
+  }
+  .segmento { flex: 0 0 auto; display: flex; }
+  .segmento button {
+    font: inherit; font-size: 13px; font-weight: 550;
+    padding: 8px 14px; min-height: 38px;
+    border: 1px solid var(--linea-fuerte); border-right-width: 0;
+    background: var(--panel); color: var(--tinta-2);
+    cursor: pointer; white-space: nowrap;
+  }
+  .segmento button:first-child { border-radius: var(--r) 0 0 var(--r); }
+  .segmento button:last-child { border-radius: 0 var(--r) var(--r) 0; border-right-width: 1px; }
+  .segmento button:hover { color: var(--tinta); background: var(--panel-2); }
+  .segmento button[aria-pressed="true"] {
+    background: var(--tinta); border-color: var(--tinta); color: var(--papel);
+  }
+
+  .buscar {
+    flex: 1 1 130px; min-width: 110px;
+    font: inherit; font-size: 14px;
+    padding: 8px 11px; min-height: 38px;
+    border: 1px solid var(--linea-fuerte); border-radius: var(--r);
+    background: var(--panel); color: var(--tinta);
+  }
+  .buscar::placeholder { color: var(--tinta-3); }
+
+  /* ─────────── grilla: cada pantalla define sus columnas ─────────── */
+
+  .cabecera, .fila { display: grid; gap: 10px; align-items: center; }
+
+  .tio    .cabecera, .tio    .fila { grid-template-columns: minmax(0,1fr) 74px 84px 74px 62px 168px 74px; }
+  .contar .fila { grid-template-columns: minmax(0,1fr) 168px 112px; }
+  .contar .cabecera { display: none; }   /* una sola columna: el título dice qué se cuenta */
+  .magico .cabecera, .magico .fila { grid-template-columns: minmax(0,1fr) 168px; }
+  .arts   .cabecera, .arts   .fila {
+    grid-template-columns: minmax(0,1.1fr) 116px 138px minmax(0,1.5fr) 104px;
+  }
+
+  .cabecera {
+    flex: 0 0 auto; padding: 6px 16px;
+    background: var(--papel); border-bottom: 1px solid var(--linea-fuerte);
+  }
+  .cabecera span {
+    font-family: var(--mono); font-size: 9.5px;
+    text-transform: uppercase; letter-spacing: 0.11em;
+    color: var(--tinta-3); text-align: right;
+  }
+  .cabecera span:first-child { text-align: left; }
+  .cabecera .cmag  { color: var(--ajeno); }
+  .cabecera .cpido { color: var(--acento); text-align: center; }
+  .cabecera .ccant { text-align: center; }
+
+  /* ─────────── lista ─────────── */
+
+  .lista { flex: 1 1 auto; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+
+  .cat {
+    position: sticky; top: 0; z-index: 2;
+    margin: 0; padding: 7px 16px;
+    background: var(--papel); border-bottom: 1px solid var(--linea-fuerte);
+    font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.13em; color: var(--tinta-2);
+    display: flex; justify-content: space-between; gap: 10px;
+  }
+  .cat .cn { color: var(--tinta-3); font-weight: 500; }
+
+  .fila { padding: 4px 16px; border-bottom: 1px solid var(--linea); background: var(--panel); }
+  .fila.pedida { background: color-mix(in srgb, var(--acento-suave) 45%, var(--panel)); }
+  .fila.enCero { box-shadow: inset 3px 0 0 var(--alerta); }
+
+  .nom { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+  .nom .linea1 { display: flex; align-items: baseline; gap: 7px; flex-wrap: wrap; min-width: 0; }
+  .nom .t { font-size: 14.5px; font-weight: 550; letter-spacing: -0.005em; }
+  .nom .u {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--tinta-2);
+    border: 1px solid var(--linea-fuerte); border-radius: 3px;
+    padding: 1px 5px; white-space: nowrap;
+  }
+
+  .prov {
+    font: inherit; font-size: 11.5px; font-weight: 550;
+    max-width: 100%; padding: 2px 4px;
+    border: 1px solid transparent; border-radius: 4px;
+    background: var(--panel-2); color: var(--tinta-2);
+    cursor: pointer; -webkit-appearance: none; appearance: none;
+  }
+  .prov:hover { border-color: var(--linea-fuerte); color: var(--tinta); }
+  .prov.sin { background: var(--alerta-suave); color: var(--alerta); }
+
+  /* numeros de referencia: se leen, no se tocan */
+  .ref {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 14px; text-align: right; color: var(--tinta-2); white-space: nowrap;
+  }
+  .ref.flojo { color: var(--tinta-3); font-weight: 400; opacity: 0.45; }
+  .ref.suma { font-weight: 700; color: var(--tinta); }
+  .ref.suma.enCero { color: var(--alerta); }
+  .ref.ajeno { color: var(--ajeno); font-weight: 650; font-size: 15px; }
+  .ref.ajeno.flojo { color: var(--tinta-3); font-weight: 400; }
+  .ref.total { font-weight: 700; color: var(--tinta); font-size: 15px; }
+  .ref.total .eq { color: var(--tinta-3); font-weight: 400; margin-right: 2px; }
+
+  /* stepper */
+  .pidoWrap { display: flex; justify-content: flex-end; min-width: 0; }
+  .pido { display: flex; align-items: center; flex: 1 1 auto; min-width: 0; }
+  .paso {
+    width: 44px; height: 44px; flex: 0 0 auto;
+    font: inherit; font-size: 20px; font-weight: 500; line-height: 1;
+    border: 1px solid var(--linea-fuerte);
+    background: var(--panel-2); color: var(--tinta-2);
+    cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .paso.menos { border-radius: var(--r) 0 0 var(--r); border-right: 0; }
+  .paso.mas { border-radius: 0 var(--r) var(--r) 0; border-left: 0; }
+  .paso:hover { background: var(--linea); color: var(--tinta); }
+  .paso:disabled { opacity: 0.3; cursor: default; }
+  .campo {
+    flex: 1 1 auto; min-width: 0; height: 44px;
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 16px; font-weight: 680; text-align: center;
+    border: 1px solid var(--linea-fuerte);
+    background: var(--panel); color: var(--tinta-3);
+    padding: 0 2px; border-radius: 0;
+  }
+  .campo.hay { color: var(--acento); background: var(--acento-suave); border-color: var(--acento); }
+  .campo.azul.hay { color: var(--ajeno); background: var(--ajeno-suave); border-color: var(--ajeno); }
+  .campo.verde.hay { color: var(--ok); background: color-mix(in srgb, var(--ok) 12%, var(--panel)); border-color: var(--ok); }
+
+  .sinResultados { padding: 40px 16px; text-align: center; color: var(--tinta-2); font-size: 14px; }
+
+  /* ─────────── Artículos ─────────── */
+
+  .txt {
+    width: 100%; min-width: 0;
+    font: inherit; font-size: 14.5px; font-weight: 550;
+    padding: 8px 9px; min-height: 40px;
+    border: 1px solid transparent; border-radius: var(--r);
+    background: transparent; color: var(--tinta);
+  }
+  .txt:hover { border-color: var(--linea-fuerte); }
+  .txt:focus { border-color: var(--acento); background: var(--panel); }
+  .txt.grande { font-size: 15.5px; font-weight: 650; flex: 1 1 160px; }
+  .txt.tel {
+    flex: 0 0 150px; font-family: var(--mono); font-size: 13px; font-weight: 500;
+    color: var(--tinta-2);
+  }
+
+  .campoSel {
+    width: 100%; min-width: 0;
+    font: inherit; font-size: 13.5px; font-weight: 550;
+    padding: 8px 9px; min-height: 40px;
+    border: 1px solid var(--linea-fuerte); border-radius: var(--r);
+    background: var(--panel); color: var(--tinta); cursor: pointer;
+  }
+
+  /* eliminar, con la confirmación en la misma fila */
+  .acciones { display: flex; align-items: center; justify-content: flex-end; min-height: 40px; }
+  .borrar {
+    font: inherit; font-size: 12.5px; font-weight: 600;
+    padding: 7px 10px; min-height: 36px;
+    border: 1px solid var(--linea-fuerte); border-radius: var(--r);
+    background: transparent; color: var(--tinta-3);
+    cursor: pointer; white-space: nowrap;
+  }
+  .borrar:hover { border-color: var(--alerta); color: var(--alerta); background: var(--alerta-suave); }
+  .borrar.firme {
+    background: var(--alerta); border-color: var(--alerta);
+    color: var(--papel);
+  }
+  .borrar.firme:hover { opacity: 0.85; background: var(--alerta); color: var(--papel); }
+  .cancelar {
+    font: inherit; font-size: 12.5px; font-weight: 600;
+    padding: 7px 10px; min-height: 36px;
+    border: 1px solid var(--linea-fuerte); border-radius: var(--r);
+    background: var(--panel); color: var(--tinta-2); cursor: pointer;
+  }
+  .cancelar:hover { color: var(--tinta); }
+  .confirmar {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .confTexto {
+    font-size: 11.5px; color: var(--alerta); font-weight: 600;
+    text-align: right; flex: 1 1 auto; min-width: 0;
+  }
+  .nota-inline { font-size: 11px; color: var(--tinta-3); text-align: right; }
+
+  /* reordenar categorías */
+  .mover { flex: 0 0 auto; display: flex; gap: 3px; }
+  .flecha {
+    font: inherit; font-size: 15px; line-height: 1;
+    width: 36px; height: 36px; padding: 0;
+    border: 1px solid var(--linea-fuerte); border-radius: var(--r);
+    background: var(--panel); color: var(--tinta-2); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .flecha:hover:not(:disabled) { background: var(--panel-2); color: var(--tinta); }
+  .flecha:disabled { opacity: 0.3; cursor: default; }
+
+  /* ─────────── Proveedores ─────────── */
+
+  .tarjeta { border-bottom: 1px solid var(--linea); background: var(--panel); }
+  .tarjetaCab {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 16px; flex-wrap: wrap;
+  }
+  .nOrden {
+    flex: 0 0 auto;
+    font-family: var(--mono); font-size: 11px; font-weight: 700;
+    color: var(--tinta-3);
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 1px solid var(--linea-fuerte);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cuenta {
+    flex: 0 0 auto; margin-left: auto;
+    font-family: var(--mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--tinta-3);
+  }
+  /* ─────────── lista de pedidos ─────────── */
+
+  .pedidos .cabecera, .filaPedido {
+    grid-template-columns: minmax(0,1fr) 168px 130px;
+  }
+  .filaPedido {
+    display: grid; gap: 10px; align-items: center; width: 100%;
+    font: inherit; text-align: left;
+    padding: 12px 16px; border: 0;
+    border-bottom: 1px solid var(--linea);
+    background: var(--panel); color: var(--tinta); cursor: pointer;
+  }
+  .filaPedido:hover { background: var(--panel-2); }
+  .pedFecha { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .pedDia { font-size: 15px; font-weight: 650; letter-spacing: -0.01em; }
+  .pedMeta { font-size: 12px; color: var(--tinta-3); }
+  .pedTotal {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 15px; font-weight: 700; text-align: right;
+  }
+  .pedTotal.flojo { color: var(--tinta-3); font-weight: 400; }
+
+  .pill {
+    justify-self: start;
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    padding: 4px 8px; border-radius: 4px; white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .pill.esPorArmar {
+    background: var(--tinta); color: var(--papel);
+  }
+  .pill.esArmando { background: var(--acento-suave); color: var(--acento-tinta); }
+  .pill.esArmado  { background: var(--ajeno-suave);  color: var(--ajeno); }
+  .pill.esFaltan  { background: var(--alerta-suave); color: var(--alerta); }
+  .pill.esFin     {
+    background: transparent; color: var(--tinta-3);
+    border-color: var(--linea-fuerte);
+  }
+
+  /* ─────────── precios y desglose ─────────── */
+
+  .precios .cabecera, .precios .fila {
+    grid-template-columns: minmax(0,1fr) 86px 168px 130px 118px;
+  }
+  .fila.sinPrecio { background: color-mix(in srgb, var(--alerta-suave) 45%, var(--panel)); }
+
+  .precioWrap {
+    display: flex; align-items: center;
+    border: 1px solid var(--linea-fuerte); border-radius: var(--r);
+    background: var(--panel); overflow: hidden;
+  }
+  .precioWrap .signo {
+    padding: 0 6px; align-self: stretch; display: flex; align-items: center;
+    font-family: var(--mono); font-size: 12px; font-weight: 700;
+    color: var(--tinta-3);
+    background: var(--panel-2);
+    border-right: 1px solid var(--linea-fuerte);
+  }
+  .campo.precio {
+    border: 0; border-radius: 0; text-align: right; padding: 0 8px;
+    background: transparent; height: 42px; flex: 1 1 auto; min-width: 0;
+  }
+  .campo.precio.hay { background: var(--acento-suave); color: var(--acento); }
+  .campo.precio:disabled { color: var(--tinta-2); }
+
+  .bottom.desglose { align-items: stretch; gap: 12px; flex-wrap: wrap; }
+  .cajas { flex: 1 1 auto; display: flex; gap: 8px; min-width: 0; flex-wrap: wrap; }
+  .caja {
+    flex: 1 1 130px; min-width: 0;
+    display: flex; flex-direction: column; gap: 1px;
+    padding: 7px 10px; border-radius: var(--r);
+    background: var(--panel-2);
+    border: 1px solid var(--linea);
+  }
+  .caja.cMag  { border-left: 3px solid var(--ajeno); }
+  .caja.cVerd { border-left: 3px solid var(--acento); }
+  .caja.cTot  { border-left: 3px solid var(--tinta); background: var(--panel); }
+  .cajaRot {
+    font-family: var(--mono); font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.09em; color: var(--tinta-3);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .cajaVal {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 16px; font-weight: 700; white-space: nowrap;
+  }
+  .caja.cTot .cajaVal { font-size: 18px; }
+
+  .desgAcc {
+    flex: 0 0 auto; display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap; justify-content: flex-end;
+  }
+  .faltan { font-size: 12.5px; font-weight: 600; color: var(--alerta); }
+  .listo  { font-size: 12.5px; font-weight: 600; color: var(--ok); }
+  .nota2  { font-size: 11.5px; color: var(--tinta-3); margin-top: 2px; }
+  .accion.tenue2 {
+    background: transparent; color: var(--tinta-2);
+    border-color: var(--linea-fuerte);
+  }
+  .accion.tenue2:hover { background: var(--panel-2); color: var(--tinta); }
+
+  /* ─────────── contar stock: los tres pasos ─────────── */
+
+  .wiz {
+    flex: 1 1 auto; overflow-y: auto;
+    display: flex; flex-direction: column;
+    gap: 4px; padding: 22px 18px 30px;
+    width: 100%; max-width: 480px; margin: 0 auto;
+  }
+  .wizEnc { display: flex; align-items: center; gap: 12px; min-height: 34px; }
+  .wizPaso {
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.11em; color: var(--tinta-3);
+    margin-left: auto;
+  }
+  .wizTit { margin: 6px 0 0; font-size: 25px; font-weight: 680; letter-spacing: -0.02em; }
+  .wizSub { margin: 6px 0 0; font-size: 14px; color: var(--tinta-2); line-height: 1.45; }
+
+  .volver {
+    font: inherit; font-size: 14px; font-weight: 600;
+    padding: 6px 10px 6px 6px; min-height: 34px;
+    border: 0; border-radius: var(--r);
+    background: transparent; color: var(--tinta-2); cursor: pointer;
+  }
+  .volver:hover { background: var(--panel-2); color: var(--tinta); }
+
+  .opciones { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+  .opcion {
+    font: inherit; text-align: left;
+    display: flex; flex-direction: column; gap: 3px;
+    padding: 16px; min-height: 68px;
+    border: 1px solid var(--linea-fuerte); border-radius: 10px;
+    background: var(--panel); color: var(--tinta); cursor: pointer;
+  }
+  .opcion:hover { border-color: var(--acento); background: var(--acento-suave); }
+  .opcion.tenue { min-height: 56px; padding: 14px 16px; background: transparent; }
+  .opcion.tenue:hover { background: var(--panel-2); border-color: var(--tinta-3); }
+  .opcionLinea { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+  .opcionNom { font-size: 17px; font-weight: 650; }
+  .opcionApodo { font-size: 13px; color: var(--tinta-3); }
+  .opcionSub { font-size: 12.5px; color: var(--tinta-2); }
+
+  .tildeOk {
+    width: 46px; height: 46px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700;
+    background: color-mix(in srgb, var(--ok) 16%, transparent); color: var(--ok);
+    margin-bottom: 6px;
+  }
+
+  /* fila ya revisada */
+  .fila.contada { background: color-mix(in srgb, var(--ok) 8%, var(--panel)); }
+
+  .igual {
+    font: inherit; font-size: 12.5px; font-weight: 600;
+    min-height: 44px; padding: 0 8px;
+    border: 1px solid var(--linea-fuerte); border-radius: var(--r);
+    background: var(--panel); color: var(--tinta-3); cursor: pointer;
+    white-space: nowrap;
+  }
+  .igual:hover { border-color: var(--ok); color: var(--ok); }
+  .fila.contada .igual { visibility: hidden; }
+
+  /* ─────────── tags de proveedores, ordenables ─────────── */
+
+  .tags {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    align-items: center; min-width: 0; padding: 2px 0;
+  }
+  .tag {
+    display: inline-flex; align-items: stretch;
+    border: 1px solid var(--linea-fuerte); border-radius: 5px;
+    background: var(--panel-2); overflow: hidden;
+    min-height: 32px;
+  }
+  /* el primero es el que usa el pedido */
+  .tag.primero {
+    border-color: var(--acento);
+    background: var(--acento-suave);
+  }
+  .tag.arrastrando { opacity: 0.5; }
+
+  .tagOrden {
+    display: flex; align-items: center; justify-content: center;
+    width: 26px; flex: 0 0 26px;
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+    color: var(--tinta-3);
+    background: color-mix(in srgb, var(--tinta) 7%, transparent);
+    cursor: grab;
+    touch-action: none;   /* sin esto el arrastre táctil scrollea la página */
+    user-select: none;
+  }
+  .tag.primero .tagOrden { color: var(--acento-tinta); }
+  .tagOrden:active { cursor: grabbing; }
+
+  .tagNom {
+    display: flex; align-items: center;
+    padding: 0 6px;
+    font-size: 12.5px; font-weight: 600; color: var(--tinta-2);
+    white-space: nowrap;
+  }
+  .tag.primero .tagNom { color: var(--acento-tinta); }
+
+  .tagX {
+    font: inherit; font-size: 14px; line-height: 1;
+    width: 24px; flex: 0 0 24px; padding: 0;
+    border: 0; background: transparent; color: var(--tinta-3);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .tagX:hover { background: var(--alerta-suave); color: var(--alerta); }
+
+  .tagAgregar {
+    font: inherit; font-size: 12px; font-weight: 600;
+    min-height: 32px; padding: 0 4px;
+    border: 1px dashed var(--linea-fuerte); border-radius: 5px;
+    background: transparent; color: var(--tinta-3);
+    cursor: pointer; max-width: 118px;
+  }
+  .tagAgregar:hover { border-color: var(--tinta-3); color: var(--tinta); }
+
+
+  /* ─────────── barra inferior ─────────── */
+
+  .bottom {
+    flex: 0 0 auto; display: flex; align-items: center; gap: 14px;
+    padding: 10px 16px; padding-bottom: max(10px, env(safe-area-inset-bottom));
+    background: var(--panel); border-top: 1px solid var(--linea-fuerte);
+  }
+  .avance { flex: 1 1 auto; min-width: 0; }
+  .avance .cifra { font-size: 13.5px; font-weight: 550; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .avance .cifra b {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-weight: 700; font-size: 15px;
+  }
+  .avance .nota { font-size: 11.5px; color: var(--ok); font-weight: 550; margin-top: 1px; }
+  .barra { height: 3px; background: var(--linea); border-radius: 2px; margin-top: 5px; overflow: hidden; }
+  .barra i { display: block; height: 100%; background: var(--acento); width: 0; transition: width 0.18s ease; }
+
+  .accion {
+    flex: 0 0 auto; font: inherit; font-size: 14.5px; font-weight: 600;
+    padding: 12px 18px; min-height: 46px;
+    border: 1px solid var(--tinta); border-radius: var(--r);
+    background: var(--tinta); color: var(--papel); cursor: pointer;
+  }
+  .accion:hover { background: var(--acento-tinta); border-color: var(--acento-tinta); }
+
+  /* ─────────── las dos hojas ─────────── */
+
+  .accion.chico { margin-left: auto; padding: 9px 14px; min-height: 40px; font-size: 13.5px; }
+
+  .hojas { padding: 20px 16px 40px; background: var(--panel-2); }
+
+  .hoja {
+    background: #fff; color: #111;
+    max-width: 190mm; margin: 0 auto 22px;
+    padding: 14mm 12mm;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.10);
+    font-family: var(--sans);
+  }
+
+  .hojaEnc { border-bottom: 2px solid #111; padding-bottom: 7px; margin-bottom: 10px; }
+  .hojaTit { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+  .hojaTit strong { font-size: 19px; font-weight: 700; letter-spacing: 0.02em; }
+  .hojaFecha { font-size: 13.5px; font-weight: 600; }
+  .hojaBanda {
+    display: inline-block; margin-top: 7px;
+    font-size: 14px; font-weight: 700; letter-spacing: 0.06em;
+    padding: 3px 9px; border: 2px solid #111;
+  }
+  .hojaSub { font-size: 11.5px; margin-top: 6px; color: #444; }
+
+  .tabla { width: 100%; border-collapse: collapse; }
+  .tabla th {
+    font-family: var(--mono); font-size: 9.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.09em;
+    text-align: left; color: #111;
+    border-bottom: 1.5px solid #111;
+    padding: 5px 6px;
+  }
+  .tabla th.num, .tabla td.num { text-align: right; }
+  .tabla th.escribir, .tabla td.escribir { text-align: center; }
+  .tabla th.tick, .tabla td.tick { text-align: center; width: 20mm; }
+
+  .tabla td {
+    padding: 6px; border-bottom: 1px solid #C9C9C9;
+    font-size: 13px; vertical-align: middle;
+  }
+  .tabla td.art { font-weight: 650; font-size: 13.5px; }
+  .tabla td.art .uniCol { font-weight: 400; font-size: 11px; color: #555; }
+  .tabla td.num {
+    font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 13px;
+  }
+  .tabla td.num.grande { font-size: 15px; font-weight: 700; }
+  .tabla td.num.nada { color: #999; }
+  .tabla td.puesto { font-size: 12.5px; }
+
+  /* casilla para tildar lo que ya cargó */
+  .casilla {
+    display: inline-block; width: 15px; height: 15px;
+    border: 1.5px solid #111;
+  }
+  /* columnas en blanco: se escriben a mano en el mercado */
+  .tabla td.escribir { border-left: 1px solid #C9C9C9; min-width: 18mm; }
+
+  .tabla tr.grupo td {
+    padding: 9px 6px 4px;
+    border-bottom: 1.5px solid #111;
+    font-size: 12.5px;
+  }
+  .tabla tr.grupo strong {
+    font-size: 13.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .tabla tr.grupo .tel { font-family: var(--mono); font-size: 11.5px; color: #333; }
+  .tabla tr.grupo .cuantos { float: right; font-size: 11px; color: #555; }
+
+  :is(button, input, select):focus-visible {
+    outline: 2px solid var(--acento); outline-offset: 1px; position: relative; z-index: 1;
+  }
+
+  /* ─────────── impresión ─────────── */
+
+  @media print {
+    @page { size: A4 portrait; margin: 12mm; }
+
+    /* la app es position:fixed, y eso imprime solo la primera página */
+    .app { position: static; display: block; height: auto; background: #fff; }
+    .pantalla { display: block; }
+    .roles, .subnav, .noImprimir, .bottom { display: none !important; }
+
+    .hojas { padding: 0; background: #fff; overflow: visible; }
+    .hoja {
+      max-width: none; margin: 0; padding: 0;
+      box-shadow: none;
+      break-after: page;
+    }
+    .hoja:last-child { break-after: auto; }
+
+    /* que el encabezado de la tabla se repita en cada página */
+    .tabla thead { display: table-header-group; }
+    .tabla tr { break-inside: avoid; }
+    .tabla tr.grupo { break-after: avoid; }
+    .hojaEnc { break-after: avoid; }
+  }
+  @media (prefers-reduced-motion: reduce) { .barra i { transition: none; } }
+
+  /* ─────────── angosto ─────────── */
+
+  @media (max-width: 899px) {
+    .cabecera { display: none; }
+
+    .fila { grid-template-columns: minmax(0,1fr) auto !important; gap: 7px 10px; padding: 9px 14px 10px; }
+    .tio .fila, .magico .fila {
+      grid-template-areas: "nom nums" "tot pid";
+    }
+    /* contar en celular: nombre arriba, stepper y "está igual" abajo */
+    .contar .fila {
+      grid-template-columns: auto 1fr !important;
+      grid-template-areas: "nom nom" "pid igual" !important;
+    }
+    .contar .nom { grid-area: nom; }
+    .contar .pidoWrap { grid-area: pid; justify-content: flex-start; }
+    .contar .pido { flex: 0 0 auto; }
+    .contar .igual { grid-area: igual; justify-self: end; }
+    .wizTit { font-size: 22px; }
+
+    /* lista de pedidos en celular */
+    .pedidos .cabecera { display: none; }
+    .filaPedido {
+      grid-template-columns: minmax(0,1fr) auto;
+      grid-template-areas: "fecha total" "pill pill";
+      gap: 6px 10px;
+    }
+    .pedFecha { grid-area: fecha; }
+    .pedTotal { grid-area: total; }
+    .pill { grid-area: pill; }
+
+    /* precios en celular */
+    .precios .fila {
+      grid-template-columns: 1fr 1fr !important;
+      grid-template-areas: "nom nom" "acomp sub" "comp precio" !important;
+    }
+    .precios .nom { grid-area: nom; }
+    .precios .fila > .ref:not(.total) { grid-area: acomp; text-align: left; }
+    .precios .pidoWrap { grid-area: comp; justify-content: flex-start; }
+    .precios .pido { flex: 0 0 auto; }
+    .precios .precioWrap { grid-area: precio; }
+    .precios .ref.total { grid-area: sub; }
+    .cajas { order: 2; }
+    .desgAcc { order: 1; width: 100%; justify-content: space-between; }
+    .nom { grid-area: nom; }
+    .nums {
+      grid-area: nums;
+      display: flex; flex-wrap: wrap; justify-content: flex-end;
+      gap: 2px 10px; align-items: baseline;
+    }
+    .nums .par { display: flex; align-items: baseline; gap: 4px; }
+    .nums .par .k {
+      font-family: var(--sans); font-size: 9.5px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em; color: var(--tinta-3);
+    }
+    .refTotal { grid-area: tot; align-self: center; }
+    .refTotal .ref { text-align: left; }
+    .refTotal .k {
+      font-size: 9.5px; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--tinta-3); margin-right: 6px;
+    }
+    .pidoWrap { grid-area: pid; flex: 0 0 auto; }
+    .pido { flex: 0 0 auto; }
+    .campo { flex: 0 0 64px; width: 64px; }
+    .senal { flex: 1 1 45%; }
+    .accion { padding: 12px 13px; font-size: 13.5px; }
+
+    /* que los tres roles se vean: si no, el activo queda fuera de pantalla */
+    .roles { flex-wrap: wrap; overflow-x: visible; }
+    .roles .lbl { display: none; }
+    .roles button { flex: 1 1 auto; }
+    .subnav button { flex: 1 1 auto; padding: 10px 8px; font-size: 12.5px; }
+
+    /* Artículos: nombre, unidad + categoría, tags, y eliminar al final */
+    .arts .fila {
+      grid-template-columns: 1fr 1fr !important;
+      grid-template-areas: "nom nom" "uni cat" "tags tags" "acc acc" !important;
+    }
+    .arts .nom { grid-area: nom; }
+    .arts .fila > select:nth-of-type(1) { grid-area: uni; }
+    .arts .fila > select:nth-of-type(2) { grid-area: cat; }
+    .arts .tags { grid-area: tags; }
+    .arts .acciones { grid-area: acc; justify-content: flex-start; }
+    .arts .txt { padding-left: 0; }
+
+    /* Categorías */
+    .cats .tarjetaCab { gap: 8px; }
+    .cats .cuenta { margin-left: 0; }
+
+    .txt.tel { flex: 1 1 120px; }
+  }
+</style>
+
+<div class="app">
+
+  <nav class="roles" aria-label="Ver la app como">
+    <span class="lbl">Mockup · entrar como</span>
+    <button type="button" data-rol="contar" aria-pressed="false">Verdulería</button>
+    <button type="button" data-rol="magico" aria-pressed="false">Súper Mágico</button>
+    <button type="button" data-rol="tio"    aria-pressed="true">Constantino</button>
+  </nav>
+
+  <nav class="subnav" id="subnav" aria-label="Pantallas de Constantino" hidden></nav>
+
+  <div class="pantalla" id="pantalla"></div>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var PLURAL = {
+    unidad: ["unidad","unidades"], docena: ["docena","docenas"],
+    atado: ["atado","atados"], paquete: ["paquete","paquetes"],
+    cajon: ["cajón","cajones"], plancha: ["plancha","planchas"],
+    bolsa: ["bolsa","bolsas"], malla: ["malla","mallas"], kilo: ["kilo","kilos"]
+  };
+
+  // [nombre, unidad, deposito, verduleria, pedido Magico, pido]
+  var GRUPOS = [
+    ["hoja", "Verdura de hoja", [
+      ["ACELGA","atado",2,1,4,6],
+      ["ACELGA LAVADA","paquete",0,3,6,0],
+      ["ESPINACA","atado",0,0,3,4],
+      ["ESPINACA LAVADA","paquete",0,2,4,0],
+      ["LECHUGA MANTECA","docena",3,2,5,4],
+      ["LECHUGA CRESPA","docena",1,1,3,3],
+      ["LECHUGA MORADA","docena",0,0,2,2],
+      ["LECHUGA ESCAROLA","docena",2,0,0,1],
+      ["RUCULA","atado",4,2,6,0],
+      ["BERRO","docena",1,0,0,0],
+      ["KALE","atado",0,1,0,0],
+      ["MIZUNA","atado",0,0,0,0],
+      ["MICROGREENS","paquete",0,4,0,0],
+      ["VERDURA BABY","bolsa",2,1,4,0],
+      ["APIO","docena",2,1,3,0],
+      ["PUERRO","atado",3,1,2,0],
+      ["CEBOLLA VERDEO","atado",5,2,8,0],
+      ["CEBOLLIN","atado",0,1,0,0],
+      ["NABO","atado",1,0,0,0],
+      ["RABANITO","atado",0,0,3,0],
+      ["BROCOLI","docena",0,0,4,0],
+      ["COLIFLOR","unidad",6,4,12,0],
+      ["REPOLLO BLANCO","unidad",4,3,6,0],
+      ["REPOLLO ROJO","unidad",2,1,3,0],
+      ["REPOLLO CRESPO","unidad",1,0,2,0]
+    ]],
+    ["aromaticas", "Aromáticas", [
+      ["PEREJIL","atado",6,3,10,0],
+      ["CILANTRO","atado",4,2,8,0],
+      ["ALBAHACA","atado",0,0,4,0],
+      ["MENTA","atado",1,1,2,0],
+      ["CIBOULET","atado",0,1,0,0],
+      ["ENELDO","atado",0,0,0,0],
+      ["ROMERO","paquete",2,1,0,0],
+      ["TOMILLO","paquete",1,1,0,0],
+      ["OREGANO","paquete",3,2,3,0],
+      ["LAUREL","paquete",2,0,0,0],
+      ["SALVIA","paquete",0,0,0,0],
+      ["HINOJO","unidad",0,2,0,0]
+    ]],
+    ["fruto", "Fruto", [
+      ["TOMATE ESPECIAL","plancha",8,5,20,0],
+      ["TOMATE MEDIANO","plancha",4,2,12,0],
+      ["TOMATE CHICO","plancha",2,1,6,0],
+      ["TOMATE PERITA","plancha",3,2,8,0],
+      ["CHERRY","cajon",0,0,6,0],
+      ["MORRON ROJO","cajon",5,3,15,0],
+      ["MORRON VERDE","cajon",3,2,8,0],
+      ["MORRON AMARILLO","cajon",1,1,0,0],
+      ["CATALAN DULCE","plancha",2,1,3,0],
+      ["CATALAN PICANTE","plancha",1,0,0,0],
+      ["BERENGENA","cajon",2,1,5,0],
+      ["ZAPALLITO","cajon",4,2,8,0],
+      ["ZUCHINI","cajon",2,1,0,0],
+      ["PEPINO","cajon",3,1,6,0],
+      ["CHAUCHA VERDE","cajon",1,1,3,0],
+      ["CHOCLO","docena",0,0,6,0],
+      ["PALTA","cajon",2,2,6,0],
+      ["CALABAZIN","cajon",3,1,4,0],
+      ["KABUTIA","unidad",5,3,8,0]
+    ]],
+    ["raiz", "Raíz y bulbo", [
+      ["PAPA BLANCA","bolsa",12,6,20,0],
+      ["PAPA ROSADA","bolsa",0,0,15,0],
+      ["PAPIN","bolsa",2,1,0,0],
+      ["BONIATO CRIOLLO","cajon",6,3,10,0],
+      ["BONIATO ZANAHORIA","cajon",3,2,6,0],
+      ["CEBOLLA","bolsa",10,5,18,0],
+      ["CEBOLLA MORADA","bolsa",3,2,0,0],
+      ["AJO","unidad",4,6,12,0],
+      ["ZANAHORIA","bolsa",8,4,14,0],
+      ["REMOLACHA","atado",3,2,5,0],
+      ["REMOLACHA COCIDA","paquete",0,1,0,0],
+      ["JENGIBRE","kilo",1,2,0,0]
+    ]],
+    ["fruta", "Fruta", [
+      ["BANANA BRASIL","cajon",6,4,15,0],
+      ["BANANA ECUADOR","cajon",3,2,0,0],
+      ["MANZANA VERDE","plancha",4,3,10,0],
+      ["MANZANA GALA ESPECIAL","plancha",3,2,8,0],
+      ["MANZANA FUJI ESPECIAL","plancha",2,1,6,0],
+      ["MANZANA PINK ESPECIAL","plancha",1,1,0,0],
+      ["PERA ESPECIAL","plancha",3,2,6,0],
+      ["PERA MEDIANA","plancha",1,1,0,0],
+      ["NARANJA ESPECIAL","cajon",5,3,12,0],
+      ["NARANJA CHICA MALLA","malla",2,1,0,0],
+      ["MANDARINA ESPECIAL","cajon",0,0,10,0],
+      ["LIMON","cajon",3,2,6,0],
+      ["ANANA","unidad",4,2,8,0],
+      ["KIWI","cajon",2,1,0,0],
+      ["FRUTILLA ESPECIAL","cajon",0,0,0,0],
+      ["SANDIA","unidad",0,0,0,0],
+      ["MELON","unidad",0,0,0,0],
+      ["UVA BLANCA","cajon",0,0,0,0],
+      ["UVA ROSADA","cajon",0,0,0,0],
+      ["CEREZA","kilo",0,0,0,0],
+      ["HIGO","cajon",0,0,0,0],
+      ["MORA","cajon",0,0,0,0],
+      ["FRAMBUESA","cajon",0,0,0,0],
+      ["ARANDANO","cajon",0,0,0,0],
+      ["MANGO","unidad",0,0,0,0],
+      ["PAPAYA","unidad",0,0,0,0],
+      ["FRUTA DRAGON","unidad",0,0,0,0],
+      ["KAKI","cajon",0,0,0,0],
+      ["MEMBRILLO","cajon",0,0,0,0],
+      ["GRANADA","cajon",0,0,0,0],
+      ["MARACUYA","kilo",0,0,0,0],
+      ["QUINOTO","kilo",0,0,0,0],
+      ["COCO","unidad",0,0,0,0],
+      ["DATILES","kilo",0,0,0,0],
+      ["LIMA","cajon",0,0,0,0],
+      ["PLATANO MACHO","cajon",0,0,0,0]
+    ]],
+    ["otros", "Otros", [
+      ["CHAMPIGNON","kilo",2,3,6,0],
+      ["HONGOS","kilo",0,1,0,0],
+      ["BROTE SOJA","paquete",1,2,4,0],
+      ["BROTE ALFALFA","paquete",0,1,0,0],
+      ["CHOCLO COCIDO","unidad",0,2,0,0],
+      ["MANI TOSTADO","kilo",2,1,0,0]
+    ]]
+  ];
+
+  var PROVEEDORES = [
+    { id:"ruso",    nombre:"Ruso",           tel:"099 111 222" },
+    { id:"mica",    nombre:"Mica",           tel:"099 222 333" },
+    { id:"perdomo", nombre:"Perdomo",        tel:"099 333 444" },
+    { id:"moisso",  nombre:"Domingo Moisso", tel:"099 444 555" },
+    { id:"borges",  nombre:"Borges",         tel:"099 555 666" },
+    { id:"diego",   nombre:"Diego",          tel:"099 666 777" },
+    { id:"antonio", nombre:"Antonio",        tel:"099 777 888" }
+  ];
+
+  var PROV_DE = {
+    "ACELGA":"ruso","ACELGA LAVADA":"ruso","ESPINACA":"ruso","ESPINACA LAVADA":"ruso",
+    "LECHUGA MANTECA":"ruso","LECHUGA CRESPA":"ruso","LECHUGA MORADA":"ruso",
+    "LECHUGA ESCAROLA":"ruso","RUCULA":"ruso","BERRO":"ruso","KALE":"ruso",
+    "VERDURA BABY":"ruso","MICROGREENS":"ruso",
+    "PEREJIL":"mica","CILANTRO":"mica","ALBAHACA":"mica","MENTA":"mica",
+    "CIBOULET":"mica","ROMERO":"mica","TOMILLO":"mica","OREGANO":"mica",
+    "LAUREL":"mica","MIZUNA":"mica","CEBOLLA VERDEO":"mica","CEBOLLIN":"mica","PUERRO":"mica",
+    "PAPA BLANCA":"perdomo","PAPA ROSADA":"perdomo","PAPIN":"perdomo",
+    "TOMATE ESPECIAL":"perdomo","TOMATE MEDIANO":"perdomo",
+    "TOMATE CHICO":"borges","TOMATE PERITA":"borges","MORRON ROJO":"borges",
+    "MORRON VERDE":"borges","MORRON AMARILLO":"borges","CHERRY":"borges",
+    "BONIATO CRIOLLO":"moisso","BONIATO ZANAHORIA":"moisso","ZANAHORIA":"moisso",
+    "CEBOLLA":"moisso","CEBOLLA MORADA":"moisso","AJO":"moisso","KABUTIA":"moisso",
+    "CALABAZIN":"moisso","ZAPALLITO":"moisso","ZUCHINI":"moisso","PEPINO":"moisso",
+    "BERENGENA":"moisso",
+    "BANANA BRASIL":"diego","BANANA ECUADOR":"diego","MANZANA VERDE":"diego",
+    "MANZANA GALA ESPECIAL":"diego","MANZANA FUJI ESPECIAL":"diego",
+    "MANZANA PINK ESPECIAL":"diego","PERA ESPECIAL":"diego","PERA MEDIANA":"diego",
+    "NARANJA ESPECIAL":"diego","NARANJA CHICA MALLA":"diego",
+    "MANDARINA ESPECIAL":"diego","LIMON":"diego",
+    "BROCOLI":"antonio","COLIFLOR":"antonio","REPOLLO BLANCO":"antonio",
+    "REPOLLO ROJO":"antonio","REPOLLO CRESPO":"antonio","REMOLACHA":"antonio",
+    "NABO":"antonio","RABANITO":"antonio","APIO":"antonio","CHOCLO":"antonio",
+    "CHAUCHA VERDE":"antonio","PALTA":"antonio"
+  };
+
+  function sinTildes(s) {
+    return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  }
+
+  var CATS = GRUPOS.map(function (g) { return { id: g[0], titulo: g[1] }; });
+  var UNIDADES = ["unidad","docena","atado","paquete","cajon","plancha","bolsa","malla","kilo"];
+
+  // Articulos con mas de un proveedor: del audio, "a veces le compro a este,
+  // a veces al otro, y ayer le compre a los dos".
+  var EXTRA_PROV = {
+    "PAPA BLANCA": ["moisso"],
+    "PAPA ROSADA": ["moisso"],
+    "TOMATE ESPECIAL": ["borges"],
+    "TOMATE MEDIANO": ["borges"],
+    "LECHUGA MANTECA": ["mica"],
+    "ACELGA": ["mica"]
+  };
+
+  var items = [];
+  GRUPOS.forEach(function (g) {
+    g[2].forEach(function (r) {
+      var base = PROV_DE[r[0]] ? [PROV_DE[r[0]]] : [];
+      var provs = base.concat(EXTRA_PROV[r[0]] || []);
+      items.push({
+        nombre: r[0], unidad: r[1],
+        dep: r[2], verd: r[3], mag: r[4], pido: r[5],
+        cat: g[0], norm: sinTildes(r[0]),
+        provs: provs,                    // quienes le pueden vender (N:N)
+        prov: provs[0] || null           // a quien se lo pide en este pedido
+      });
+    });
+  });
+
+  // La lista es la lista: todas las pantallas ven los mismos articulos.
+  // Lo que no se maneja se elimina en Articulos; en la base queda con baja
+  // logica para que los pedidos viejos lo sigan mostrando.
+  function enLista() { return items; }
+
+  // ─────────────────────────────────────────────
+  // PEDIDOS · cada uno guarda sus propias líneas. El histórico es lo que
+  // después sirve para reconocer patrones y sugerirle el pedido.
+  // ─────────────────────────────────────────────
+
+  // Precio de referencia por unidad, en pesos, para inventar totales creíbles.
+  var PRECIO_BASE = {
+    atado: 60, docena: 320, unidad: 45, paquete: 95,
+    cajon: 720, plancha: 460, bolsa: 950, malla: 260, kilo: 130
+  };
+
+  // pseudo-aleatorio determinista: el mockup se ve igual en cada carga
+  function semilla(txt) {
+    var h = 2166136261;
+    for (var i = 0; i < txt.length; i++) {
+      h ^= txt.charCodeAt(i);
+      h = (h * 16777619) >>> 0;
+    }
+    return (h % 1000) / 1000;
+  }
+
+  function lineaVacia(it) {
+    return { pido: 0, mag: 0, comprado: null, precio: null, prov: it.provs[0] || null };
+  }
+
+  // Un pedido viejo, con cantidades y precios ya cargados.
+  function pedidoHistorico(id, fecha, conPrecios) {
+    var p = { id: id, fecha: fecha, prearmadoAt: fecha,
+              magicoRecibidoAt: "la noche anterior", lineas: {} };
+    items.forEach(function (it) {
+      var s = semilla(id + it.nombre);
+      if (s > 0.55) return;                       // no todo entra en cada pedido
+      var l = lineaVacia(it);
+      l.mag = Math.round(s * 14) + 1;
+      l.pido = Math.round(semilla(it.nombre + id) * 8);
+      l.comprado = l.pido + l.mag;
+      if (conPrecios === "todos") {
+        l.precio = Math.round(PRECIO_BASE[it.unidad] * (0.8 + s * 0.5) / 10) * 10;
+      } else if (conPrecios === "algunos" && s < 0.3) {
+        l.precio = Math.round(PRECIO_BASE[it.unidad] * (0.8 + s * 0.5) / 10) * 10;
+      }
+      p.lineas[it.nombre] = l;
+    });
+    return p;
+  }
+
+  var PEDIDOS = [
+    pedidoHistorico("p-0717", "2026-07-17", "todos"),
+    pedidoHistorico("p-0721", "2026-07-21", "todos"),
+    pedidoHistorico("p-0724", "2026-07-24", "todos"),
+    pedidoHistorico("p-0728", "2026-07-28", "todos"),
+    pedidoHistorico("p-0731", "2026-07-31", "todos"),
+    pedidoHistorico("p-0804", "2026-08-04", "algunos")
+  ];
+
+  // El que está armando ahora: arranca con el pedido del Mágico ya recibido.
+  // Las cantidades iniciales venían cargadas en el artículo; de acá en adelante
+  // viven en la línea del pedido, que es donde corresponden.
+  var pedidoNuevo = { id: "p-0807", fecha: "2026-08-07", prearmadoAt: null,
+                      magicoRecibidoAt: "ayer a las 19:40", lineas: {} };
+  items.forEach(function (it) {
+    var l = lineaVacia(it);
+    l.mag = it.mag || 0;          // esto ya llegó del Mágico
+    l.pido = 0;                   // el tío todavía no puso nada: "Por armar"
+    if (l.mag) pedidoNuevo.lineas[it.nombre] = l;
+    delete it.mag;
+    delete it.pido;
+  });
+  PEDIDOS.push(pedidoNuevo);
+
+  var pedidoActual = pedidoNuevo;
+
+  // línea de un pedido para un artículo, creándola si hace falta
+  function linDe(ped, it) {
+    var l = ped.lineas[it.nombre];
+    if (!l) { l = lineaVacia(it); ped.lineas[it.nombre] = l; }
+    return l;
+  }
+  function lin(it) { return linDe(pedidoActual, it); }
+
+  // El Mágico carga sobre el pedido del viaje que viene, sin importar cuál
+  // esté mirando el tío. Si no hay ninguno abierto, cae en el más nuevo.
+  function pedidoAbierto() {
+    return pedidoEnCurso() || PEDIDOS.slice().sort(function (a, b) {
+      return a.fecha < b.fecha ? 1 : a.fecha > b.fecha ? -1 : 0;
+    })[0];
+  }
+
+  function lineasDe(p) {
+    return Object.keys(p.lineas).map(function (n) { return p.lineas[n]; });
+  }
+  function enElPedido(p) {
+    return lineasDe(p).filter(function (l) { return l.pido + l.mag > 0; });
+  }
+
+  // El estado sale de los datos, no es un campo aparte.
+  function estadoDe(p) {
+    if (!p.prearmadoAt) {
+      // el pedido existe porque llegó el del Mágico, pero él todavía no puso
+      // ninguna cantidad propia
+      var empezado = lineasDe(p).some(function (l) { return l.pido > 0; });
+      return empezado ? "armando" : "porArmar";
+    }
+    var ls = enElPedido(p);
+    if (!ls.length) return "armado";
+    var conPrecio = ls.filter(function (l) { return l.precio != null; }).length;
+    if (conPrecio === 0) return "armado";
+    if (conPrecio < ls.length) return "faltanPrecios";
+    return "finalizado";
+  }
+
+  var ESTADOS = {
+    porArmar:      { texto: "Por armar",      clase: "esPorArmar" },
+    armando:       { texto: "Armando",        clase: "esArmando" },
+    armado:        { texto: "Armado",         clase: "esArmado" },
+    faltanPrecios: { texto: "Faltan precios", clase: "esFaltan" },
+    finalizado:    { texto: "Finalizado",     clase: "esFin" }
+  };
+
+  // El pedido del viaje que viene: el que todavía no salió al mercado.
+  // Es donde escribe el Mágico y el que el tío tiene para armar.
+  function pedidoEnCurso() {
+    var abiertos = PEDIDOS.filter(function (p) {
+      var e = estadoDe(p);
+      return e === "porArmar" || e === "armando";
+    });
+    if (!abiertos.length) return null;
+    return abiertos.slice().sort(function (a, b) {
+      return a.fecha < b.fecha ? 1 : a.fecha > b.fecha ? -1 : 0;
+    })[0];
+  }
+
+  // Si compró menos de lo pedido, el Mágico se lleva lo suyo primero y la
+  // verdulería absorbe el faltante. ← confirmar con el tío.
+  function reparto(l) {
+    var comprado = l.comprado != null ? l.comprado : l.pido + l.mag;
+    var delMagico = Math.min(l.mag, comprado);
+    return { comprado: comprado, magico: delMagico, verduleria: comprado - delMagico };
+  }
+
+  function totales(p) {
+    var t = { total: 0, magico: 0, verduleria: 0, conPrecio: 0, sinPrecio: 0 };
+    enElPedido(p).forEach(function (l) {
+      if (l.precio == null) { t.sinPrecio++; return; }
+      t.conPrecio++;
+      var r = reparto(l);
+      t.total += r.comprado * l.precio;
+      t.magico += r.magico * l.precio;
+      t.verduleria += r.verduleria * l.precio;
+    });
+    return t;
+  }
+
+  function pesos(n) {
+    return "$ " + Math.round(n).toLocaleString("es-UY");
+  }
+
+  var DIAS = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+  var MESES = ["enero","febrero","marzo","abril","mayo","junio","julio",
+               "agosto","septiembre","octubre","noviembre","diciembre"];
+  function fechaLarga(iso) {
+    var partes = iso.split("-");
+    var d = new Date(+partes[0], +partes[1] - 1, +partes[2]);
+    var dia = DIAS[d.getDay()];
+    return dia.charAt(0).toUpperCase() + dia.slice(1) +
+           " " + d.getDate() + " de " + MESES[d.getMonth()];
+  }
+  function fechaCorta(iso) {
+    var partes = iso.split("-");
+    return partes[2] + "/" + partes[1];
+  }
+  // "viernes 7", para meter en el medio de una frase
+  function fechaFrase(iso) {
+    var partes = iso.split("-");
+    var d = new Date(+partes[0], +partes[1] - 1, +partes[2]);
+    return DIAS[d.getDay()] + " " + d.getDate();
+  }
+
+  // ── estado del mockup
+  var rol = "tio";            // contar | magico | tio
+  var vistaTio = "pedidos";   // pedidos | pedido | imprimir | arts | cats | provs
+  function clave() { return rol === "tio" ? vistaTio : rol; }
+
+  var orden = { tio: "categoria", contar: "categoria", magico: "categoria", arts: "categoria" };
+  var busqueda = { tio: "", contar: "", magico: "", arts: "" };
+  var pantalla = document.getElementById("pantalla");
+  var subnav = document.getElementById("subnav");
+  var mqAngosto = window.matchMedia("(max-width: 899px)");
+
+  function uni(it, n) { var p = PLURAL[it.unidad]; return n === 1 ? p[0] : p[1]; }
+  function enCero(it) { return it.dep + it.verd === 0; }
+  function prov(id) {
+    for (var i = 0; i < PROVEEDORES.length; i++) if (PROVEEDORES[i].id === id) return PROVEEDORES[i];
+    return null;
+  }
+
+  // Los proveedores van alfabeticos en todas las listas y en las hojas.
+  // Se ordena al mostrar, no mutando el array: si no, la fila se movería
+  // sola mientras escribe el nombre.
+  function provsOrdenados() {
+    return PROVEEDORES.slice().sort(function (a, b) {
+      return a.nombre.localeCompare(b.nombre, "es", { sensitivity: "base" });
+    });
+  }
+
+  function agrupar(modo, q, universo) {
+    var vis = (universo || enLista()).filter(function (it) {
+      return !q || it.norm.indexOf(q) > -1;
+    });
+
+    if (modo === "alfabetico") {
+      var out = [];
+      vis.slice().sort(function (a, b) { return a.norm < b.norm ? -1 : a.norm > b.norm ? 1 : 0; })
+        .forEach(function (it) {
+          var l = it.norm.charAt(0).toUpperCase();
+          var g = out[out.length - 1];
+          if (!g || g.titulo !== l) out.push({ titulo: l, sub: "", items: [it] });
+          else g.items.push(it);
+        });
+      return out;
+    }
+
+    if (modo === "proveedor") {
+      var gs = provsOrdenados().map(function (p) {
+        return { titulo: p.nombre, sub: p.tel,
+          items: vis.filter(function (it) { return lin(it).prov === p.id; }) };
+      });
+      gs.push({ titulo: "Sin proveedor", sub: "asignar antes de pedir",
+        items: vis.filter(function (it) { return !lin(it).prov; }) });
+      return gs.filter(function (g) { return g.items.length; });
+    }
+
+    return CATS.map(function (c) {
+      return { titulo: c.titulo, sub: "",
+        items: vis.filter(function (it) { return it.cat === c.id; }) };
+    }).filter(function (g) { return g.items.length; });
+  }
+
+  // ── piezas reutilizables
+
+  function el(tag, clase, texto) {
+    var n = document.createElement(tag);
+    if (clase) n.className = clase;
+    if (texto != null) n.textContent = texto;
+    return n;
+  }
+
+  function celdaNombre(it, conProveedor) {
+    var nom = el("div", "nom");
+    var l1 = el("div", "linea1");
+    l1.appendChild(el("span", "t", it.nombre));
+    l1.appendChild(el("span", "u", PLURAL[it.unidad][0]));
+    nom.appendChild(l1);
+
+    if (conProveedor) {
+      var li = lin(it);
+      var sel = el("select", "prov" + (li.prov ? "" : " sin"));
+      sel.setAttribute("aria-label", "Proveedor de " + it.nombre);
+      var o0 = el("option", null, "Sin proveedor"); o0.value = "";
+      sel.appendChild(o0);
+
+      // en el orden que él definió en Artículos: 1° opción, 2° opción...
+      var suyos = it.provs.map(prov).filter(Boolean);
+      var otros = provsOrdenados().filter(function (p) { return it.provs.indexOf(p.id) === -1; });
+      function agregarGrupo(etiqueta, lista, numerar) {
+        if (!lista.length) return;
+        var g = document.createElement("optgroup");
+        g.label = etiqueta;
+        lista.forEach(function (p, i) {
+          var o = el("option", null, numerar ? (i + 1) + "· " + p.nombre : p.nombre);
+          o.value = p.id;
+          g.appendChild(o);
+        });
+        sel.appendChild(g);
+      }
+      agregarGrupo("Le compra a", suyos, true);
+      agregarGrupo("Otros", otros, false);
+      sel.value = li.prov || "";
+      sel.addEventListener("change", function () {
+        li.prov = sel.value || null;
+        sel.className = "prov" + (li.prov ? "" : " sin");
+        if (orden.tio === "proveedor") render();
+      });
+      nom.appendChild(sel);
+    }
+    return nom;
+  }
+
+  // Tags de proveedores, en el orden en que les pide: el primero es el que
+  // usa el pedido, y si ese no tiene, pasa al segundo. Se reordenan
+  // arrastrando el número (no todo el tag, para no matar el scroll táctil).
+  function celdaProveedores(it, onCambio) {
+    var cont = el("div", "tags");
+
+    function avisar() {
+      // el pedido en curso se arma con el primero de la lista
+      if (estadoDe(pedidoActual) === "armando") lin(it).prov = it.provs[0] || null;
+      if (onCambio) onCambio();
+    }
+
+    function renumerar() {
+      Array.prototype.forEach.call(cont.querySelectorAll(".tag"), function (t, i) {
+        t.querySelector(".tagOrden").textContent = String(i + 1);
+        t.classList.toggle("primero", i === 0);
+      });
+    }
+
+    function ordenarDom() {
+      it.provs.forEach(function (id) {
+        var t = cont.querySelector('.tag[data-id="' + id + '"]');
+        if (t) cont.insertBefore(t, cont.querySelector(".tagAgregar"));
+      });
+      renumerar();
+    }
+
+    function arrastrar(e, tag) {
+      e.preventDefault();
+      var idOrigen = tag.getAttribute("data-id");
+      try { tag.setPointerCapture(e.pointerId); } catch (err) {}
+      tag.classList.add("arrastrando");
+
+      function mover(ev) {
+        var bajo = document.elementFromPoint(ev.clientX, ev.clientY);
+        var destino = bajo && bajo.closest ? bajo.closest(".tag") : null;
+        if (!destino || destino === tag || destino.parentNode !== cont) return;
+        var desde = it.provs.indexOf(idOrigen);
+        var hasta = it.provs.indexOf(destino.getAttribute("data-id"));
+        if (desde < 0 || hasta < 0 || desde === hasta) return;
+        it.provs.splice(hasta, 0, it.provs.splice(desde, 1)[0]);
+        ordenarDom();
+      }
+      function soltar(ev) {
+        try { tag.releasePointerCapture(ev.pointerId); } catch (err) {}
+        tag.classList.remove("arrastrando");
+        tag.removeEventListener("pointermove", mover);
+        tag.removeEventListener("pointerup", soltar);
+        tag.removeEventListener("pointercancel", soltar);
+        avisar();
+      }
+      tag.addEventListener("pointermove", mover);
+      tag.addEventListener("pointerup", soltar);
+      tag.addEventListener("pointercancel", soltar);
+    }
+
+    function pintar() {
+      cont.textContent = "";
+
+      it.provs.forEach(function (id, i) {
+        var p = prov(id);
+        var t = el("span", "tag" + (i === 0 ? " primero" : ""));
+        t.setAttribute("data-id", id);
+
+        var mango = el("span", "tagOrden", String(i + 1));
+        mango.setAttribute("role", "button");
+        mango.setAttribute("tabindex", "0");
+        mango.setAttribute("aria-label",
+          "Orden " + (i + 1) + " de " + (p ? p.nombre : "") +
+          ". Arrastrá para cambiar, o usá las flechas izquierda y derecha.");
+        mango.addEventListener("pointerdown", function (e) { arrastrar(e, t); });
+        mango.addEventListener("keydown", function (e) {
+          var desde = it.provs.indexOf(id);
+          var hasta = e.key === "ArrowLeft" ? desde - 1
+                    : e.key === "ArrowRight" ? desde + 1 : -1;
+          if (hasta < 0 || hasta >= it.provs.length) return;
+          e.preventDefault();
+          it.provs.splice(hasta, 0, it.provs.splice(desde, 1)[0]);
+          avisar();
+          pintar();
+          var m = cont.querySelector('.tag[data-id="' + id + '"] .tagOrden');
+          if (m) m.focus();
+        });
+        t.appendChild(mango);
+
+        t.appendChild(el("span", "tagNom", p ? p.nombre : "—"));
+
+        var x = el("button", "tagX", "×");
+        x.type = "button";
+        x.setAttribute("aria-label", "Quitar " + (p ? p.nombre : "") + " de " + it.nombre);
+        x.addEventListener("click", function () {
+          it.provs = it.provs.filter(function (o) { return o !== id; });
+          avisar();
+          pintar();
+        });
+        t.appendChild(x);
+
+        cont.appendChild(t);
+      });
+
+      var libres = provsOrdenados().filter(function (p) {
+        return it.provs.indexOf(p.id) === -1;
+      });
+      if (libres.length) {
+        var sel = el("select", "tagAgregar");
+        sel.setAttribute("aria-label", "Agregar un proveedor a " + it.nombre);
+        var o0 = el("option", null, it.provs.length ? "+" : "+ Proveedor");
+        o0.value = "";
+        sel.appendChild(o0);
+        libres.forEach(function (p) {
+          var o = el("option", null, p.nombre); o.value = p.id; sel.appendChild(o);
+        });
+        sel.value = "";
+        sel.addEventListener("change", function () {
+          if (!sel.value) return;
+          it.provs.push(sel.value);
+          avisar();
+          pintar();
+        });
+        cont.appendChild(sel);
+      }
+    }
+
+    pintar();
+    return cont;
+  }
+
+  // stepper generico: `art` es el articulo (nombre y unidad para los rotulos),
+  // `obj` es donde se guarda el numero: el articulo si es stock, la linea del
+  // pedido si es una cantidad del pedido.
+  function stepper(art, obj, campo, color, alCambiar) {
+    var it = art;
+    var wrap = el("div", "pidoWrap");
+    var caja = el("div", "pido");
+
+    var menos = el("button", "paso menos", "−");
+    menos.type = "button";
+    menos.setAttribute("aria-label", "Restar uno a " + it.nombre);
+
+    var campoInp = el("input", "campo" + (color ? " " + color : "") + (obj[campo] > 0 ? " hay" : ""));
+    campoInp.type = "text";
+    campoInp.inputMode = "numeric";
+    campoInp.autocomplete = "off";
+    campoInp.value = String(obj[campo]);
+    campoInp.setAttribute("aria-label",
+      it.nombre + ", cantidad en " + PLURAL[it.unidad][1]);
+
+    var mas = el("button", "paso mas", "+");
+    mas.type = "button";
+    mas.setAttribute("aria-label", "Sumar uno a " + it.nombre);
+
+    caja.appendChild(menos); caja.appendChild(campoInp); caja.appendChild(mas);
+    wrap.appendChild(caja);
+
+    function reflejar() {
+      campoInp.className = "campo" + (color ? " " + color : "") + (obj[campo] > 0 ? " hay" : "");
+      menos.disabled = obj[campo] === 0;
+      if (alCambiar) alCambiar();
+    }
+    function set(n) {
+      obj[campo] = Math.max(0, Math.min(999, n | 0));
+      campoInp.value = String(obj[campo]);
+      reflejar();
+    }
+    menos.disabled = obj[campo] === 0;
+    menos.addEventListener("click", function () { set(obj[campo] - 1); });
+    mas.addEventListener("click", function () { set(obj[campo] + 1); });
+    campoInp.addEventListener("focus", function () { campoInp.select(); });
+    campoInp.addEventListener("input", function () {
+      var n = parseInt(campoInp.value.replace(/[^0-9]/g, ""), 10);
+      obj[campo] = isNaN(n) ? 0 : Math.max(0, Math.min(999, n));
+      reflejar();
+    });
+    campoInp.addEventListener("blur", function () { set(obj[campo]); });
+    campoInp.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowUp") { e.preventDefault(); set(obj[campo] + 1); }
+      if (e.key === "ArrowDown") { e.preventDefault(); set(obj[campo] - 1); }
+      if (e.key === "Enter") { campoInp.blur(); }
+    });
+    return wrap;
+  }
+
+  function numero(valor, clases, titulo) {
+    var d = el("div", "ref " + clases + (valor === 0 ? " flojo" : ""));
+    d.textContent = valor === 0 ? "–" : String(valor);
+    if (titulo) d.title = titulo;
+    return d;
+  }
+
+  function conRotulo(rotulo, nodo) {
+    var p = el("div", "par");
+    p.appendChild(el("span", "k", rotulo));
+    p.appendChild(nodo);
+    return p;
+  }
+
+  function cabecera(cols) {
+    var c = el("div", "cabecera");
+    c.setAttribute("aria-hidden", "true");
+    cols.forEach(function (co) { c.appendChild(el("span", co[1] || null, co[0])); });
+    return c;
+  }
+
+  function barraOrden(modos, valorActual, onOrden, onBuscar) {
+    var c = el("div", "controles");
+    c.appendChild(el("span", "rotOrden", "Agrupar por"));
+    var seg = el("div", "segmento");
+    seg.setAttribute("role", "group");
+    seg.setAttribute("aria-label", "Agrupar por");
+    modos.forEach(function (m) {
+      var b = el("button", null, m[1]);
+      b.type = "button";
+      b.setAttribute("aria-pressed", String(m[0] === valorActual));
+      b.addEventListener("click", function () { onOrden(m[0]); });
+      seg.appendChild(b);
+    });
+    c.appendChild(seg);
+    var q = el("input", "buscar");
+    q.type = "search";
+    q.placeholder = "Buscar artículo";
+    q.autocomplete = "off";
+    q.setAttribute("enterkeyhint", "search");
+    q.addEventListener("input", function () { onBuscar(sinTildes(q.value).trim(), q); });
+    c.appendChild(q);
+    return c;
+  }
+
+  function listaAgrupada(modo, q, hacerFila, universo) {
+    var lista = el("main", "lista");
+    var grupos = agrupar(modo, q, universo);
+    if (!grupos.length) {
+      lista.appendChild(el("p", "sinResultados", "Ningún artículo coincide con eso."));
+      return lista;
+    }
+    grupos.forEach(function (g) {
+      var h = el("h2", "cat");
+      var izq = el("span", null, g.titulo);
+      if (g.sub) izq.appendChild(el("span", "cn", " · " + g.sub));
+      h.appendChild(izq);
+      h.appendChild(el("span", "cn", String(g.items.length)));
+      lista.appendChild(h);
+      g.items.forEach(function (it) { lista.appendChild(hacerFila(it)); });
+    });
+    return lista;
+  }
+
+  function pie(textoCifra, hechos, total, textoBoton, onBoton) {
+    var f = el("footer", "bottom");
+    var av = el("div", "avance");
+    var cifra = el("div", "cifra");
+    cifra.appendChild(el("b", null, String(hechos)));
+    cifra.appendChild(document.createTextNode(" de "));
+    cifra.appendChild(el("b", null, String(total)));
+    cifra.appendChild(document.createTextNode(" " + textoCifra));
+    av.appendChild(cifra);
+    var nota = el("div", "nota");
+    av.appendChild(nota);
+    var barra = el("div", "barra");
+    var i = el("i");
+    i.style.width = (total ? (hechos / total) * 100 : 0) + "%";
+    barra.appendChild(i);
+    av.appendChild(barra);
+    f.appendChild(av);
+    var b = el("button", "accion", textoBoton);
+    b.type = "button";
+    b.addEventListener("click", function () { onBoton(nota); });
+    f.appendChild(b);
+    return f;
+  }
+
+  function hora() {
+    var d = new Date();
+    return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2);
+  }
+
+  // ─────────────────────────────────────────────
+  // PANTALLA 1 · Contar stock. Tres pasos, pensada para celular.
+  // ─────────────────────────────────────────────
+
+  // Una sola cuenta por dispositivo (el celular del local queda logueado como
+  // "Verdulería") y acá se elige la persona. El tío mantiene esta lista.
+  var PERSONAL = ["Hernán", "Wilson", "Marcela"];
+
+  var LUGARES = {
+    dep:  { nombre: "Depósito",   apodo: "el galpón", campo: "dep" },
+    verd: { nombre: "Verdulería", apodo: "el local",  campo: "verd" }
+  };
+
+  var ULTIMO = {
+    dep:  { cuando: "el lunes",      quien: "Wilson" },
+    verd: { cuando: "ayer a las 20:15", quien: "Hernán" }
+  };
+
+  var conteo = { paso: 1, persona: null, lugar: null, tocados: {} };
+
+  function pantallaContar() {
+    if (conteo.paso === 1) return contarQuien();
+    if (conteo.paso === 2) return contarDonde();
+    if (conteo.paso === 4) return contarGuardado();
+    return contarLista();
+  }
+
+  function marcoWiz(pasoN, titulo, subtitulo, volver) {
+    var p = el("div", "pantalla contar");
+    var w = el("div", "wiz");
+    var enc = el("div", "wizEnc");
+    if (volver) {
+      var b = el("button", "volver", "‹ Volver");
+      b.type = "button";
+      b.addEventListener("click", volver);
+      enc.appendChild(b);
+    }
+    enc.appendChild(el("span", "wizPaso", "Paso " + pasoN + " de 3"));
+    w.appendChild(enc);
+    w.appendChild(el("h1", "wizTit", titulo));
+    if (subtitulo) w.appendChild(el("p", "wizSub", subtitulo));
+    p.appendChild(w);
+    return { pantalla: p, wiz: w };
+  }
+
+  // ── Paso 1: ¿quién sos?
+  function contarQuien() {
+    var m = marcoWiz(1, "¿Quién sos?",
+      "Queda anotado quién contó, así el tío sabe a quién preguntarle.");
+    var ops = el("div", "opciones");
+    PERSONAL.forEach(function (nombre) {
+      var b = el("button", "opcion", null);
+      b.type = "button";
+      b.appendChild(el("span", "opcionNom", nombre));
+      b.addEventListener("click", function () {
+        conteo.persona = nombre;
+        conteo.paso = 2;
+        render();
+      });
+      ops.appendChild(b);
+    });
+    m.wiz.appendChild(ops);
+    return m.pantalla;
+  }
+
+  // ── Paso 2: ¿qué vas a contar?
+  function contarDonde() {
+    var m = marcoWiz(2, "¿Qué vas a contar?", null, function () {
+      conteo.paso = 1; conteo.persona = null; render();
+    });
+    var ops = el("div", "opciones");
+    ["verd", "dep"].forEach(function (k) {
+      var L = LUGARES[k], u = ULTIMO[k];
+      var b = el("button", "opcion", null);
+      b.type = "button";
+      var fila1 = el("span", "opcionLinea");
+      fila1.appendChild(el("span", "opcionNom", L.nombre));
+      fila1.appendChild(el("span", "opcionApodo", L.apodo));
+      b.appendChild(fila1);
+      b.appendChild(el("span", "opcionSub",
+        "Contado " + u.cuando + " por " + u.quien));
+      b.addEventListener("click", function () {
+        conteo.lugar = k;
+        conteo.tocados = {};
+        conteo.paso = 3;
+        render();
+      });
+      ops.appendChild(b);
+    });
+    m.wiz.appendChild(ops);
+    return m.pantalla;
+  }
+
+  // ── Paso 3: la lista, un solo número por artículo
+  function contarLista() {
+    var LUG = LUGARES[conteo.lugar];
+    var p = el("div", "pantalla contar");
+
+    var top = el("div", "top");
+    var v = el("div", "viaje");
+    var vb = el("button", "volver", "‹");
+    vb.type = "button";
+    vb.setAttribute("aria-label", "Volver a elegir qué contar");
+    vb.addEventListener("click", function () { conteo.paso = 2; render(); });
+    v.appendChild(vb);
+    var h1 = el("h1", null, LUG.nombre);
+    v.appendChild(h1);
+    var quien = el("div", "quien");
+    quien.appendChild(el("b", null, conteo.persona));
+    v.appendChild(quien);
+    top.appendChild(v);
+    top.appendChild(barraOrden(
+      [["categoria","Categoría"],["alfabetico","Alfabético"]],
+      orden.contar,
+      function (md) { orden.contar = md; render(); },
+      function (q) { busqueda.contar = q; renderLista(); }
+    ));
+    p.appendChild(top);
+
+    function fila(it) {
+      var tocado = !!conteo.tocados[it.nombre];
+      var f = el("div", "fila" + (tocado ? " contada" : ""));
+      f.appendChild(celdaNombre(it, false));
+
+      var marcar = function () {
+        conteo.tocados[it.nombre] = true;
+        f.className = "fila contada";
+        refrescarPie();
+      };
+
+      f.appendChild(stepper(it, it, LUG.campo, "verde", marcar));
+
+      // "está igual": confirma sin cambiar el número
+      var ok = el("button", "igual", "Está igual");
+      ok.type = "button";
+      ok.setAttribute("aria-label", it.nombre + " está igual, confirmar");
+      ok.addEventListener("click", marcar);
+      f.appendChild(ok);
+      return f;
+    }
+
+    p.appendChild(listaAgrupada(orden.contar, busqueda.contar, fila));
+
+    var total = enLista().length;
+    var hechos = Object.keys(conteo.tocados).length;
+    p.appendChild(pie("artículos revisados", hechos, total,
+      "Guardar conteo", function () {
+        ULTIMO[conteo.lugar] = { cuando: "hoy a las " + hora(), quien: conteo.persona };
+        conteo.paso = 4;
+        render();
+      }));
+    return p;
+  }
+
+  // ── Guardado: y ofrecer contar el otro lugar
+  function contarGuardado() {
+    var LUG = LUGARES[conteo.lugar];
+    var otro = conteo.lugar === "dep" ? "verd" : "dep";
+    var hechos = Object.keys(conteo.tocados).length;
+
+    var p = el("div", "pantalla contar");
+    var w = el("div", "wiz");
+    w.appendChild(el("div", "tildeOk", "✓"));
+    w.appendChild(el("h1", "wizTit", "Conteo guardado"));
+    w.appendChild(el("p", "wizSub",
+      LUG.nombre + " · " + hechos + " artículos revisados · " + conteo.persona +
+      ". Ya le llegó al tío."));
+
+    var ops = el("div", "opciones");
+    var b1 = el("button", "opcion", null);
+    b1.type = "button";
+    var l1 = el("span", "opcionLinea");
+    l1.appendChild(el("span", "opcionNom", "Contar " + LUGARES[otro].nombre));
+    l1.appendChild(el("span", "opcionApodo", LUGARES[otro].apodo));
+    b1.appendChild(l1);
+    b1.appendChild(el("span", "opcionSub",
+      "Contado " + ULTIMO[otro].cuando + " por " + ULTIMO[otro].quien));
+    b1.addEventListener("click", function () {
+      conteo.lugar = otro; conteo.tocados = {}; conteo.paso = 3; render();
+    });
+    ops.appendChild(b1);
+
+    var b2 = el("button", "opcion tenue", null);
+    b2.type = "button";
+    b2.appendChild(el("span", "opcionNom", "Listo, terminé"));
+    b2.addEventListener("click", function () {
+      conteo = { paso: 1, persona: null, lugar: null, tocados: {} };
+      render();
+    });
+    ops.appendChild(b2);
+
+    w.appendChild(ops);
+    p.appendChild(w);
+    return p;
+  }
+
+  // ─────────────────────────────────────────────
+  // PANTALLA 2 · El Súper Mágico arma su pedido
+  // ─────────────────────────────────────────────
+  function pantallaMagico() {
+    var p = el("div", "pantalla magico");
+    var pedAbierto = pedidoAbierto();
+
+    var top = el("div", "top");
+    var v = el("div", "viaje");
+    var h1 = el("h1", null, "Pedido ");
+    h1.appendChild(el("span", "dia", "· para el " + fechaLarga(pedAbierto.fecha)));
+    v.appendChild(h1);
+    v.appendChild(el("span", "pill esArmando", "Borrador"));
+    var quien = el("div", "quien");
+    quien.appendChild(el("b", null, "Súper Mágico"));
+    v.appendChild(quien);
+    top.appendChild(v);
+    top.appendChild(barraOrden(
+      [["categoria","Categoría"],["alfabetico","Alfabético"]],
+      orden.magico,
+      function (m) { orden.magico = m; render(); },
+      function (q) { busqueda.magico = q; renderLista(); }
+    ));
+    p.appendChild(top);
+
+    p.appendChild(cabecera([["Artículo"], ["Cuánto pido", "cpido"]]));
+
+    var ped = pedidoAbierto();
+
+    function fila(it) {
+      var li = linDe(ped, it);
+      var f = el("div", "fila" + (li.mag > 0 ? " pedida" : ""));
+      f.appendChild(celdaNombre(it, false));
+      if (mqAngosto.matches) {
+        f.appendChild(el("div", "nums"));
+        f.appendChild(el("div", "refTotal"));
+      }
+      f.appendChild(stepper(it, li, "mag", "azul", function () {
+        f.className = "fila" + (li.mag > 0 ? " pedida" : "");
+        refrescarPie();
+      }));
+      return f;
+    }
+
+    p.appendChild(listaAgrupada(orden.magico, busqueda.magico, fila));
+
+    var actM = enLista();
+    var pedidos = actM.filter(function (it) { return linDe(ped, it).mag > 0; }).length;
+    p.appendChild(pie("artículos pedidos", pedidos, actM.length,
+      "Enviar pedido", function (nota) {
+        // esto es lo que después ve el tío en su lista de pedidos
+        ped.magicoRecibidoAt = "hoy a las " + hora();
+        nota.textContent = "Pedido enviado a Constantino · hoy " + hora();
+      }));
+    return p;
+  }
+
+  // ─────────────────────────────────────────────
+  // PANTALLA 3a · La lista de pedidos. Es donde arranca el tío.
+  // ─────────────────────────────────────────────
+  function pantallaPedidos() {
+    var p = el("div", "pantalla pedidos");
+
+    var enCurso = pedidoEnCurso();
+
+    var top = el("div", "top");
+    var v = el("div", "viaje");
+    v.appendChild(el("h1", null, "Pedidos"));
+    v.appendChild(el("div", "quien", "El más nuevo arriba"));
+    top.appendChild(v);
+
+    // Los dos insumos que tienen que estar antes de poder armar: el conteo y
+    // el pedido del Mágico. Ninguno de los dos lo genera él.
+    var sen = el("div", "senales");
+    ["verd", "dep"].forEach(function (k) {
+      var u = ULTIMO[k];
+      var reciente = u.cuando.indexOf("hoy") === 0;
+      var s = el("div", "senal" + (reciente ? "" : " vieja"));
+      s.appendChild(el("span", "rot", "Stock " + LUGARES[k].nombre.toLowerCase()));
+      var val = el("span", "val");
+      val.appendChild(document.createTextNode("Contado " + u.cuando + " · "));
+      val.appendChild(el("b", null, u.quien));
+      s.appendChild(val);
+      sen.appendChild(s);
+    });
+
+    var sMag = el("div", "senal" + (enCurso && enCurso.magicoRecibidoAt ? "" : " vieja"));
+    sMag.appendChild(el("span", "rot", "Pedido Súper Mágico"));
+    var valMag = el("span", "val");
+    if (enCurso && enCurso.magicoRecibidoAt) {
+      var cuantosMag = lineasDe(enCurso).filter(function (l) { return l.mag > 0; }).length;
+      valMag.appendChild(document.createTextNode(
+        "Recibido " + enCurso.magicoRecibidoAt + " · "));
+      valMag.appendChild(el("b", null, cuantosMag + " artículos"));
+    } else {
+      valMag.textContent = "Todavía no llegó";
+    }
+    sMag.appendChild(valMag);
+    sen.appendChild(sMag);
+    top.appendChild(sen);
+
+    p.appendChild(top);
+
+    p.appendChild(cabecera([
+      ["Viaje"], ["Estado"], ["Total", "num"]
+    ]));
+
+    var lista = el("main", "lista");
+
+    PEDIDOS.slice().sort(function (a, b) {
+      return a.fecha < b.fecha ? 1 : a.fecha > b.fecha ? -1 : 0;
+    }).forEach(function (ped) {
+      var est = estadoDe(ped);
+      var t = totales(ped);
+      var cuantos = enElPedido(ped).length;
+
+      var f = el("button", "filaPedido");
+      f.type = "button";
+
+      var izq = el("div", "pedFecha");
+      izq.appendChild(el("span", "pedDia", fechaLarga(ped.fecha)));
+      izq.appendChild(el("span", "pedMeta",
+        ped.fecha.split("-")[0] + " · " + cuantos + " artículos"));
+      f.appendChild(izq);
+
+      var pill = el("span", "pill " + ESTADOS[est].clase, ESTADOS[est].texto);
+      if (est === "faltanPrecios") {
+        pill.textContent = "Faltan " + t.sinPrecio + " precios";
+      }
+      f.appendChild(pill);
+
+      var tot = el("div", "pedTotal");
+      tot.textContent = t.total > 0 ? pesos(t.total) : "–";
+      if (t.total === 0) tot.classList.add("flojo");
+      f.appendChild(tot);
+
+      f.addEventListener("click", function () {
+        pedidoActual = ped;
+        vistaTio = "pedido";
+        render();
+      });
+      lista.appendChild(f);
+    });
+    p.appendChild(lista);
+
+    var pie2 = el("footer", "bottom");
+    var av = el("div", "avance");
+    var finalizados = PEDIDOS.filter(function (x) { return estadoDe(x) === "finalizado"; }).length;
+    var cifra = el("div", "cifra");
+    cifra.appendChild(el("b", null, String(PEDIDOS.length)));
+    cifra.appendChild(document.createTextNode(" pedidos · " + finalizados + " cerrados con precios"));
+    av.appendChild(cifra);
+    pie2.appendChild(av);
+
+    function crearPedido() {
+      var hoy = new Date();
+      var iso = hoy.getFullYear() + "-" +
+        ("0" + (hoy.getMonth() + 1)).slice(-2) + "-" + ("0" + hoy.getDate()).slice(-2);
+      var ped = { id: "p-" + Date.now(), fecha: iso, prearmadoAt: null,
+                  magicoRecibidoAt: null, lineas: {} };
+      PEDIDOS.push(ped);
+      pedidoActual = ped;
+      vistaTio = "pedido";
+      render();
+    }
+
+    // Si el viaje que viene ya tiene el pedido del Mágico, la acción es
+    // seguir con ese. "Nuevo pedido" queda para un viaje sin pedido del Mágico.
+    if (enCurso) {
+      var otro = el("button", "accion tenue2", "Otro viaje");
+      otro.type = "button";
+      otro.addEventListener("click", crearPedido);
+      pie2.appendChild(otro);
+
+      var est = estadoDe(enCurso);
+      var seguir = el("button", "accion",
+        (est === "porArmar" ? "Armar el del " : "Seguir con el del ") +
+        fechaFrase(enCurso.fecha));
+      seguir.type = "button";
+      seguir.addEventListener("click", function () {
+        pedidoActual = enCurso;
+        vistaTio = "pedido";
+        render();
+      });
+      pie2.appendChild(seguir);
+    } else {
+      var nuevo = el("button", "accion", "Nuevo pedido");
+      nuevo.type = "button";
+      nuevo.addEventListener("click", crearPedido);
+      pie2.appendChild(nuevo);
+    }
+
+    p.appendChild(pie2);
+    return p;
+  }
+
+  // ─────────────────────────────────────────────
+  // PANTALLA 3b · Un pedido. La misma vista cambia según el estado:
+  //   armando   → cantidades (stock, Mágico, cuánto pido)
+  //   armado    → igual, más el acceso a cargar precios
+  //   precios   → compré + precio, con el desglose abajo en vivo
+  //   finalizado→ lo mismo, de lectura
+  // ─────────────────────────────────────────────
+  function pantallaPedido() {
+    var est = estadoDe(pedidoActual);
+    var enPrecios = pedidoActual.cargandoPrecios ||
+                    est === "faltanPrecios" || est === "finalizado";
+    return enPrecios ? pedidoPrecios(est) : pedidoCantidades(est);
+  }
+
+  function encabezadoPedido(est, extra) {
+    var top = el("div", "top");
+    var v = el("div", "viaje");
+    var vb = el("button", "volver", "‹ Pedidos");
+    vb.type = "button";
+    vb.addEventListener("click", function () { vistaTio = "pedidos"; render(); });
+    v.appendChild(vb);
+    var h1 = el("h1", null, fechaLarga(pedidoActual.fecha));
+    v.appendChild(h1);
+    v.appendChild(el("span", "pill " + ESTADOS[est].clase, ESTADOS[est].texto));
+    if (extra) v.appendChild(extra);
+    top.appendChild(v);
+    return top;
+  }
+
+  function pedidoCantidades(est) {
+    var p = el("div", "pantalla tio");
+    var angosto = mqAngosto.matches;
+    var top = encabezadoPedido(est, null);
+
+    // Estas señales salen de los conteos reales: si la verdulería acaba de
+    // contar, acá se ve. Es el "última fecha de actualización y quién lo hizo".
+    var sen = el("div", "senales");
+    ["verd", "dep"].forEach(function (k) {
+      var u = ULTIMO[k];
+      var reciente = u.cuando.indexOf("hoy") === 0;
+      var s = el("div", "senal" + (reciente ? "" : " vieja"));
+      s.appendChild(el("span", "rot", "Stock " + LUGARES[k].nombre.toLowerCase()));
+      var val = el("span", "val");
+      val.appendChild(document.createTextNode("Contado " + u.cuando + " · "));
+      val.appendChild(el("b", null, u.quien));
+      s.appendChild(val);
+      sen.appendChild(s);
+    });
+
+    var s2 = el("div", "senal");
+    s2.appendChild(el("span", "rot", "Pedido Súper Mágico"));
+    s2.appendChild(el("span", "val", "Recibido ayer a las 19:40"));
+    sen.appendChild(s2);
+    top.appendChild(sen);
+
+    top.appendChild(barraOrden(
+      [["categoria","Categoría"],["alfabetico","Alfabético"],["proveedor","Proveedor"]],
+      orden.tio,
+      function (m) { orden.tio = m; render(); },
+      function (q) { busqueda.tio = q; renderLista(); }
+    ));
+    p.appendChild(top);
+
+    p.appendChild(cabecera([
+      ["Artículo"], ["Depósito"], ["Verdulería"], ["Dep + Verd"],
+      ["Mágico", "cmag"], ["Pido p/ verdulería", "cpido"], ["A comprar"]
+    ]));
+
+    function fila(it) {
+      var li = lin(it);
+      var vacio = enCero(it);
+      function clases() {
+        return "fila" + (li.pido > 0 ? " pedida" : "") + (vacio ? " enCero" : "");
+      }
+      var f = el("div", clases());
+
+      var stock = it.dep + it.verd;
+      var nDep  = numero(it.dep, "", "Depósito: " + it.dep + " " + uni(it, it.dep));
+      var nVerd = numero(it.verd, "", "Verdulería: " + it.verd + " " + uni(it, it.verd));
+      var nSum  = numero(stock, "suma" + (vacio ? " enCero" : ""),
+        vacio ? "Sin stock: no queda ni en el depósito ni en la verdulería"
+              : "Stock total: " + stock + " " + uni(it, stock));
+      if (vacio) { nSum.textContent = "0"; nSum.classList.remove("flojo"); }
+      var nMag  = numero(li.mag, "ajeno", li.mag === 0
+        ? "El Mágico no pidió" : "El Mágico pidió " + li.mag + " " + uni(it, li.mag));
+
+      var nTot = el("div", "ref total");
+      function pintarTotal() {
+        var t = li.pido + li.mag;
+        nTot.textContent = "";
+        nTot.appendChild(el("span", "eq", "="));
+        nTot.appendChild(document.createTextNode(String(t)));
+        nTot.title = "A comprar: " + t + " " + uni(it, t);
+      }
+      pintarTotal();
+
+      var paso = stepper(it, li, "pido", null, function () {
+        f.className = clases();
+        pintarTotal();
+        refrescarPie();
+      });
+
+      f.appendChild(celdaNombre(it, true));
+      if (angosto) {
+        var nums = el("div", "nums");
+        nums.appendChild(conRotulo("Dep", nDep));
+        nums.appendChild(conRotulo("Verd", nVerd));
+        nums.appendChild(conRotulo("Stock", nSum));
+        nums.appendChild(conRotulo("Mágico", nMag));
+        f.appendChild(nums);
+        var t = el("div", "refTotal");
+        t.appendChild(el("span", "k", "A comprar"));
+        t.appendChild(nTot);
+        f.appendChild(t);
+        f.appendChild(paso);
+      } else {
+        f.appendChild(nDep);
+        f.appendChild(nVerd);
+        f.appendChild(nSum);
+        f.appendChild(nMag);
+        f.appendChild(paso);
+        f.appendChild(nTot);
+      }
+      return f;
+    }
+
+    p.appendChild(listaAgrupada(orden.tio, busqueda.tio, fila));
+
+    var actT = enLista();
+    var hechos = actT.filter(function (it) { return lin(it).pido > 0; }).length;
+
+    if (est === "armando") {
+      p.appendChild(pie("artículos con pedido", hechos, actT.length,
+        "Pre-armar e imprimir", function () {
+          pedidoActual.prearmadoAt = "hoy " + hora();
+          vistaTio = "imprimir";
+          render();
+        }));
+    } else {
+      // ya está armado e impreso: lo que sigue es volver del mercado y cargar
+      var f2 = el("footer", "bottom");
+      var av = el("div", "avance");
+      var cifra = el("div", "cifra");
+      cifra.appendChild(el("b", null, String(enElPedido(pedidoActual).length)));
+      cifra.appendChild(document.createTextNode(" artículos · impreso " + pedidoActual.prearmadoAt));
+      av.appendChild(cifra);
+      av.appendChild(el("div", "nota2", "Todavía sin precios"));
+      f2.appendChild(av);
+
+      var bImp = el("button", "accion tenue2", "Ver las hojas");
+      bImp.type = "button";
+      bImp.addEventListener("click", function () { vistaTio = "imprimir"; render(); });
+      f2.appendChild(bImp);
+
+      var bPre = el("button", "accion", "Cargar precios");
+      bPre.type = "button";
+      bPre.addEventListener("click", function () {
+        // arranca la fase de precios: lo comprado por defecto es lo pedido
+        enElPedido(pedidoActual).forEach(function (l) {
+          if (l.comprado == null) l.comprado = l.pido + l.mag;
+        });
+        var primera = enElPedido(pedidoActual)[0];
+        if (primera) primera.precio = primera.precio == null ? null : primera.precio;
+        pedidoActual.cargandoPrecios = true;
+        render();
+      });
+      f2.appendChild(bPre);
+      p.appendChild(f2);
+    }
+    return p;
+  }
+
+  // ── Fase precios: compré + precio, con el desglose en vivo abajo
+  function pedidoPrecios(est) {
+    var p = el("div", "pantalla precios");
+    var soloLectura = est === "finalizado";
+
+    var top = encabezadoPedido(est, null);
+    top.appendChild(barraOrden(
+      [["categoria","Categoría"],["alfabetico","Alfabético"],["proveedor","Proveedor"]],
+      orden.tio,
+      function (m) { orden.tio = m; render(); },
+      function (q) { busqueda.tio = q; renderLista(); }
+    ));
+    p.appendChild(top);
+
+    p.appendChild(cabecera([
+      ["Artículo"], ["A comprar", "num"], ["Compré", "num"],
+      ["Precio unitario", "cpido"], ["Subtotal", "num"]
+    ]));
+
+    function fila(it) {
+      var li = lin(it);
+      if (li.comprado == null) li.comprado = li.pido + li.mag;
+
+      var f = el("div", "fila" + (li.precio == null ? " sinPrecio" : ""));
+      f.appendChild(celdaNombre(it, true));
+
+      var aComprar = li.pido + li.mag;
+      f.appendChild(numero(aComprar, "", "Pedido: " + aComprar + " " + uni(it, aComprar)));
+
+      var subt = el("div", "ref total");
+      function pintarSub() {
+        var r = reparto(li);
+        subt.textContent = li.precio == null ? "–" : pesos(r.comprado * li.precio);
+        subt.classList.toggle("flojo", li.precio == null);
+      }
+
+      var pasoComp = stepper(it, li, "comprado", "verde", function () {
+        pintarSub();
+        refrescarPie();
+      });
+      f.appendChild(pasoComp);
+
+      // precio unitario: se escribe a mano, y vacío significa "todavía no sé"
+      var wrapP = el("div", "precioWrap");
+      var signo = el("span", "signo", "$");
+      var inpP = el("input", "campo precio" + (li.precio != null ? " hay" : ""));
+      inpP.type = "text";
+      inpP.inputMode = "numeric";
+      inpP.autocomplete = "off";
+      inpP.placeholder = "—";
+      inpP.value = li.precio != null ? String(li.precio) : "";
+      inpP.disabled = soloLectura;
+      inpP.setAttribute("aria-label", "Precio por " + PLURAL[it.unidad][0] + " de " + it.nombre);
+      inpP.addEventListener("focus", function () { inpP.select(); });
+      inpP.addEventListener("input", function () {
+        var limpio = inpP.value.replace(/[^0-9]/g, "");
+        li.precio = limpio === "" ? null : Math.min(999999, parseInt(limpio, 10));
+        inpP.className = "campo precio" + (li.precio != null ? " hay" : "");
+        f.className = "fila" + (li.precio == null ? " sinPrecio" : "");
+        pintarSub();
+        refrescarPie();
+      });
+      wrapP.appendChild(signo);
+      wrapP.appendChild(inpP);
+      f.appendChild(wrapP);
+
+      pintarSub();
+      f.appendChild(subt);
+      return f;
+    }
+
+    // solo los artículos que están en este pedido
+    var universo = enLista().filter(function (it) {
+      var l = lin(it);
+      return l.pido + l.mag > 0;
+    });
+    p.appendChild(listaAgrupada(orden.tio, busqueda.tio, fila, universo));
+
+    p.appendChild(desgloseFooter(est));
+    return p;
+  }
+
+  // El desglose: total, cuánto es del Mágico y cuánto de la verdulería.
+  function desgloseFooter(est) {
+    var t = totales(pedidoActual);
+    var f = el("footer", "bottom desglose");
+
+    var cajas = el("div", "cajas");
+    function caja(rot, valor, clase) {
+      var c = el("div", "caja" + (clase ? " " + clase : ""));
+      c.appendChild(el("span", "cajaRot", rot));
+      c.appendChild(el("span", "cajaVal", valor));
+      return c;
+    }
+    cajas.appendChild(caja("Súper Mágico", pesos(t.magico), "cMag"));
+    cajas.appendChild(caja("Verdulería", pesos(t.verduleria), "cVerd"));
+    cajas.appendChild(caja("Total del pedido", pesos(t.total), "cTot"));
+    f.appendChild(cajas);
+
+    var der = el("div", "desgAcc");
+    if (t.sinPrecio > 0) {
+      der.appendChild(el("div", "faltan",
+        "Faltan " + t.sinPrecio + (t.sinPrecio === 1 ? " precio" : " precios")));
+    } else {
+      der.appendChild(el("div", "listo", "Todos los precios cargados"));
+    }
+    if (est !== "finalizado" && t.sinPrecio === 0) {
+      var b = el("button", "accion", "Finalizar pedido");
+      b.type = "button";
+      b.addEventListener("click", function () { vistaTio = "pedidos"; render(); });
+      der.appendChild(b);
+    }
+    f.appendChild(der);
+    return f;
+  }
+
+  // ─────────────────────────────────────────────
+  // PANTALLA 4 · Artículos (el catálogo)
+  // ─────────────────────────────────────────────
+  function pantallaArticulos() {
+    var p = el("div", "pantalla arts");
+
+    var top = el("div", "top");
+    var v = el("div", "viaje");
+    var h1 = el("h1", null, "Artículos");
+    v.appendChild(h1);
+    v.appendChild(el("div", "quien",
+      "Esta lista es la que ven todas las pantallas"));
+    top.appendChild(v);
+    top.appendChild(barraOrden(
+      [["categoria","Categoría"],["alfabetico","Alfabético"]],
+      orden.arts,
+      function (m) { orden.arts = m; render(); },
+      function (q) { busqueda.arts = q; renderLista(); }
+    ));
+    p.appendChild(top);
+
+    p.appendChild(cabecera([
+      ["Nombre"], ["Unidad", "ccant"], ["Categoría", "ccant"],
+      ["Proveedores · en orden"], [""]
+    ]));
+
+    function fila(it) {
+      var f = el("div", "fila");
+
+      var nom = el("div", "nom");
+      var inp = el("input", "txt");
+      inp.type = "text";
+      inp.value = it.nombre;
+      inp.placeholder = "Nombre del artículo";
+      inp.setAttribute("aria-label", "Nombre del artículo");
+      inp.addEventListener("input", function () {
+        it.nombre = inp.value.toUpperCase();
+        it.norm = sinTildes(it.nombre);
+      });
+      nom.appendChild(inp);
+      f.appendChild(nom);
+
+      var selU = el("select", "campoSel");
+      selU.setAttribute("aria-label", "Unidad de " + it.nombre);
+      UNIDADES.forEach(function (u) {
+        var o = el("option", null, PLURAL[u][0]); o.value = u; selU.appendChild(o);
+      });
+      selU.value = it.unidad;
+      selU.addEventListener("change", function () { it.unidad = selU.value; });
+      f.appendChild(selU);
+
+      var selC = el("select", "campoSel");
+      selC.setAttribute("aria-label", "Categoría de " + it.nombre);
+      CATS.forEach(function (c) {
+        var o = el("option", null, c.titulo); o.value = c.id; selC.appendChild(o);
+      });
+      selC.value = it.cat;
+      selC.addEventListener("change", function () { it.cat = selC.value; render(); });
+      f.appendChild(selC);
+
+      f.appendChild(celdaProveedores(it, null));
+
+      // eliminar, con confirmación en la misma fila y avisando qué se pierde
+      var acc = el("div", "acciones");
+      var borrar = el("button", "borrar", "Eliminar");
+      borrar.type = "button";
+      borrar.setAttribute("aria-label", "Eliminar " + it.nombre);
+
+      borrar.addEventListener("click", function () {
+        var usos = [];
+        if (it.dep > 0 || it.verd > 0) usos.push("tiene stock cargado");
+        if (lin(it).mag > 0) usos.push("está en el pedido del Mágico");
+        if (lin(it).pido > 0) usos.push("está en el pedido de hoy");
+        if (it.provs.length) usos.push(it.provs.length === 1 ? "tiene 1 proveedor" : "tiene " + it.provs.length + " proveedores");
+
+        acc.textContent = "";
+        var aviso = el("div", "confirmar");
+        aviso.appendChild(el("span", "confTexto",
+          usos.length ? "¿Eliminar? " + usos.join(", ") : "¿Eliminar?"));
+        var si = el("button", "borrar firme", "Sí, eliminar");
+        si.type = "button";
+        var no = el("button", "cancelar", "No");
+        no.type = "button";
+        si.addEventListener("click", function () {
+          items.splice(items.indexOf(it), 1);
+          render();
+        });
+        no.addEventListener("click", function () {
+          acc.textContent = "";
+          acc.appendChild(borrar);
+        });
+        aviso.appendChild(si);
+        aviso.appendChild(no);
+        acc.appendChild(aviso);
+      });
+
+      acc.appendChild(borrar);
+      f.appendChild(acc);
+
+      return f;
+    }
+
+    p.appendChild(listaAgrupada(orden.arts, busqueda.arts, fila, items));
+
+    var conProv = items.filter(function (it) { return it.provs.length; }).length;
+    p.appendChild(pie("artículos con proveedor asignado", conProv, items.length,
+      "Agregar artículo", function () {
+        var nuevo = {
+          nombre: "", unidad: "cajon",
+          dep: 0, verd: 0, mag: 0, pido: 0,
+          cat: CATS[0].id, norm: "", nuevo: true,
+          provs: [], prov: null
+        };
+        items.unshift(nuevo);
+        busqueda.arts = "";
+        render();
+        var inp = pantalla.querySelector(".fila .txt");
+        if (inp) inp.focus();
+      }));
+    return p;
+  }
+
+  // ─────────────────────────────────────────────
+  // PANTALLA 6 · Categorías (el orden en que recorre la lista)
+  // ─────────────────────────────────────────────
+  function pantallaCategorias() {
+    var p = el("div", "pantalla cats");
+
+    var top = el("div", "top");
+    var v = el("div", "viaje");
+    v.appendChild(el("h1", null, "Categorías"));
+    v.appendChild(el("div", "quien",
+      "El orden de acá es el orden de todas las listas. Las de hoja primero, como pide él."));
+    top.appendChild(v);
+    p.appendChild(top);
+
+    var lista = el("main", "lista");
+
+    CATS.forEach(function (c, i) {
+      var cuantos = items.filter(function (it) { return it.cat === c.id; }).length;
+      var tarjeta = el("div", "tarjeta");
+      var cab = el("div", "tarjetaCab");
+
+      cab.appendChild(el("span", "nOrden", String(i + 1)));
+
+      var inp = el("input", "txt grande");
+      inp.type = "text";
+      inp.value = c.titulo;
+      inp.setAttribute("aria-label", "Nombre de la categoría");
+      inp.addEventListener("input", function () { c.titulo = inp.value; });
+      cab.appendChild(inp);
+
+      var mover = el("div", "mover");
+      var arriba = el("button", "flecha", "↑");
+      arriba.type = "button";
+      arriba.setAttribute("aria-label", "Subir " + c.titulo);
+      arriba.disabled = i === 0;
+      arriba.addEventListener("click", function () {
+        CATS.splice(i - 1, 0, CATS.splice(i, 1)[0]);
+        render();
+      });
+      var abajo = el("button", "flecha", "↓");
+      abajo.type = "button";
+      abajo.setAttribute("aria-label", "Bajar " + c.titulo);
+      abajo.disabled = i === CATS.length - 1;
+      abajo.addEventListener("click", function () {
+        CATS.splice(i + 1, 0, CATS.splice(i, 1)[0]);
+        render();
+      });
+      mover.appendChild(arriba);
+      mover.appendChild(abajo);
+      cab.appendChild(mover);
+
+      cab.appendChild(el("span", "cuenta",
+        cuantos + (cuantos === 1 ? " artículo" : " artículos")));
+
+      var acc = el("div", "acciones");
+      var borrar = el("button", "borrar", "Eliminar");
+      borrar.type = "button";
+      borrar.setAttribute("aria-label", "Eliminar la categoría " + c.titulo);
+      borrar.addEventListener("click", function () {
+        acc.textContent = "";
+        var aviso = el("div", "confirmar");
+        if (cuantos > 0) {
+          // no se puede: los articulos quedarian sin categoria
+          aviso.appendChild(el("span", "confTexto",
+            "Tiene " + cuantos + (cuantos === 1 ? " artículo" : " artículos") +
+            ". Movelos a otra categoría primero."));
+          var ok = el("button", "cancelar", "Entendido");
+          ok.type = "button";
+          ok.addEventListener("click", function () {
+            acc.textContent = ""; acc.appendChild(borrar);
+          });
+          aviso.appendChild(ok);
+        } else {
+          aviso.appendChild(el("span", "confTexto", "¿Eliminar?"));
+          var si = el("button", "borrar firme", "Sí, eliminar");
+          si.type = "button";
+          si.addEventListener("click", function () {
+            CATS.splice(CATS.indexOf(c), 1);
+            render();
+          });
+          var no = el("button", "cancelar", "No");
+          no.type = "button";
+          no.addEventListener("click", function () {
+            acc.textContent = ""; acc.appendChild(borrar);
+          });
+          aviso.appendChild(si);
+          aviso.appendChild(no);
+        }
+        acc.appendChild(aviso);
+      });
+      acc.appendChild(borrar);
+      cab.appendChild(acc);
+
+      tarjeta.appendChild(cab);
+      lista.appendChild(tarjeta);
+    });
+
+    p.appendChild(lista);
+
+    p.appendChild(pie("categorías en uso",
+      CATS.filter(function (c) {
+        return items.some(function (it) { return it.cat === c.id; });
+      }).length,
+      CATS.length,
+      "Agregar categoría", function () {
+        CATS.push({ id: "cat-" + Math.floor(Math.random() * 1e9), titulo: "" });
+        render();
+        var inputs = pantalla.querySelectorAll(".tarjeta .txt.grande");
+        var ult = inputs[inputs.length - 1];
+        if (ult) ult.focus();
+      }));
+    return p;
+  }
+
+  // ─────────────────────────────────────────────
+  // PANTALLA 5 · Proveedores y qué le compra a cada uno
+  // ─────────────────────────────────────────────
+  function pantallaProveedores() {
+    var p = el("div", "pantalla provs");
+
+    var top = el("div", "top");
+    var v = el("div", "viaje");
+    v.appendChild(el("h1", null, "Proveedores"));
+    v.appendChild(el("div", "quien",
+      "Los artículos de cada uno se asignan en Artículos"));
+    top.appendChild(v);
+    p.appendChild(top);
+
+    var lista = el("main", "lista");
+
+    provsOrdenados().forEach(function (pr) {
+      var cuantos = items.filter(function (it) { return it.provs.indexOf(pr.id) > -1; }).length;
+      var primero = items.filter(function (it) { return it.provs[0] === pr.id; }).length;
+
+      var tarjeta = el("div", "tarjeta");
+      var cab = el("div", "tarjetaCab");
+
+      var inpN = el("input", "txt grande");
+      inpN.type = "text";
+      inpN.value = pr.nombre;
+      inpN.placeholder = "Nombre";
+      inpN.setAttribute("aria-label", "Nombre del proveedor");
+      inpN.addEventListener("input", function () { pr.nombre = inpN.value; });
+      cab.appendChild(inpN);
+
+      var inpT = el("input", "txt tel");
+      inpT.type = "tel";
+      inpT.value = pr.tel;
+      inpT.placeholder = "Teléfono";
+      inpT.setAttribute("aria-label", "Teléfono de " + pr.nombre);
+      inpT.addEventListener("input", function () { pr.tel = inpT.value; });
+      cab.appendChild(inpT);
+
+      var cuenta = el("span", "cuenta",
+        cuantos + (cuantos === 1 ? " artículo" : " artículos") +
+        (cuantos ? " · " + primero + " de primera opción" : ""));
+      cab.appendChild(cuenta);
+
+      var acc = el("div", "acciones");
+      var borrar = el("button", "borrar", "Eliminar");
+      borrar.type = "button";
+      borrar.setAttribute("aria-label", "Eliminar el proveedor " + pr.nombre);
+      borrar.addEventListener("click", function () {
+        acc.textContent = "";
+        var aviso = el("div", "confirmar");
+        aviso.appendChild(el("span", "confTexto", cuantos
+          ? "¿Eliminar? sale de los " + cuantos + " artículos que tiene asignados"
+          : "¿Eliminar?"));
+        var si = el("button", "borrar firme", "Sí, eliminar");
+        si.type = "button";
+        si.addEventListener("click", function () {
+          items.forEach(function (it) {
+            it.provs = it.provs.filter(function (id) { return id !== pr.id; });
+            PEDIDOS.forEach(function (pp) { var ll = pp.lineas[it.nombre]; if (ll && ll.prov === pr.id) ll.prov = it.provs[0] || null; });
+          });
+          PROVEEDORES.splice(PROVEEDORES.indexOf(pr), 1);
+          render();
+        });
+        var no = el("button", "cancelar", "No");
+        no.type = "button";
+        no.addEventListener("click", function () {
+          acc.textContent = ""; acc.appendChild(borrar);
+        });
+        aviso.appendChild(si);
+        aviso.appendChild(no);
+        acc.appendChild(aviso);
+      });
+      acc.appendChild(borrar);
+      cab.appendChild(acc);
+
+      tarjeta.appendChild(cab);
+      lista.appendChild(tarjeta);
+    });
+
+    p.appendChild(lista);
+
+    var sinNadie = items.filter(function (it) { return !it.provs.length; }).length;
+    p.appendChild(pie("artículos sin ningún proveedor", sinNadie, items.length,
+      "Agregar proveedor", function () {
+        PROVEEDORES.push({
+          id: "p-" + Math.floor(Math.random() * 1e9),
+          nombre: "", tel: ""
+        });
+        render();
+        // sin nombre queda primero en el orden alfabético
+        var vacio = Array.prototype.filter.call(
+          pantalla.querySelectorAll(".tarjeta .txt.grande"),
+          function (i) { return i.value === ""; })[0];
+        if (vacio) vacio.focus();
+      }));
+    return p;
+  }
+
+  // ─────────────────────────────────────────────
+  // PANTALLA 7 · Las dos hojas para imprimir
+  // ─────────────────────────────────────────────
+  function pantallaImprimir() {
+    var p = el("div", "pantalla imprimir");
+
+    var top = el("div", "top noImprimir");
+    var v = el("div", "viaje");
+    var vb = el("button", "volver", "‹ Volver al pedido");
+    vb.type = "button";
+    vb.addEventListener("click", function () { vistaTio = "pedido"; render(); });
+    v.appendChild(vb);
+    var h1 = el("h1", null, "Imprimir ");
+    h1.appendChild(el("span", "dia", "· " + fechaLarga(pedidoActual.fecha)));
+    v.appendChild(h1);
+    var bt = el("button", "accion chico", "Imprimir las dos hojas");
+    bt.type = "button";
+    bt.addEventListener("click", function () { window.print(); });
+    v.appendChild(bt);
+    top.appendChild(v);
+    var aviso = el("div", "senales");
+    var s = el("div", "senal");
+    s.appendChild(el("span", "rot", "Cómo sale en papel"));
+    s.appendChild(el("span", "val",
+      "A4, blanco y negro, con los encabezados repetidos en cada página"));
+    aviso.appendChild(s);
+    top.appendChild(aviso);
+    p.appendChild(top);
+
+    var hojas = el("main", "lista hojas");
+
+    // ── Hoja 1: la del changador. Solo lo del Mágico, que va adelante.
+    var delMagico = enLista().filter(function (it) { return lin(it).mag > 0; });
+    var h1j = el("section", "hoja");
+
+    var enc1 = el("div", "hojaEnc");
+    var t1 = el("div", "hojaTit");
+    t1.appendChild(el("strong", null, "PEDIDO SÚPER MÁGICO"));
+    t1.appendChild(el("span", "hojaFecha", "Viernes 7 de agosto"));
+    enc1.appendChild(t1);
+    enc1.appendChild(el("div", "hojaBanda", "VA ADELANTE DEL CAMIÓN"));
+    enc1.appendChild(el("div", "hojaSub",
+      delMagico.length + " artículos · marcar a medida que se carga"));
+    h1j.appendChild(enc1);
+
+    var tab1 = el("table", "tabla");
+    var th1 = document.createElement("thead");
+    var tr1 = document.createElement("tr");
+    [["Cargado","tick"],["Artículo",""],["Cantidad","num"]]
+      .forEach(function (c) {
+        var th = document.createElement("th");
+        if (c[1]) th.className = c[1];
+        th.textContent = c[0];
+        tr1.appendChild(th);
+      });
+    th1.appendChild(tr1);
+    tab1.appendChild(th1);
+
+    // agrupada por puesto: el changador recorre puesto por puesto levantando
+    var porPuesto = provsOrdenados().map(function (pr) {
+      return { titulo: pr.nombre,
+        items: delMagico.filter(function (it) { return lin(it).prov === pr.id; }) };
+    });
+    porPuesto.push({ titulo: "Sin puesto asignado",
+      items: delMagico.filter(function (it) { return !lin(it).prov; }) });
+
+    porPuesto.filter(function (g) { return g.items.length; }).forEach(function (g) {
+      var tb = document.createElement("tbody");
+
+      var trG = document.createElement("tr");
+      trG.className = "grupo";
+      var tdG = document.createElement("td");
+      tdG.colSpan = 3;
+      tdG.appendChild(el("strong", null, g.titulo));
+      tdG.appendChild(el("span", "cuantos", g.items.length +
+        (g.items.length === 1 ? " artículo" : " artículos")));
+      trG.appendChild(tdG);
+      tb.appendChild(trG);
+
+      g.items.forEach(function (it) {
+        var tr = document.createElement("tr");
+        var tdT = document.createElement("td");
+        tdT.className = "tick";
+        tdT.appendChild(el("span", "casilla"));
+        tr.appendChild(tdT);
+        var tdA = document.createElement("td");
+        tdA.className = "art";
+        tdA.textContent = it.nombre;
+        tr.appendChild(tdA);
+        var tdC = document.createElement("td");
+        tdC.className = "num grande";
+        tdC.textContent = lin(it).mag + " " + uni(it, lin(it).mag);
+        tr.appendChild(tdC);
+        tb.appendChild(tr);
+      });
+      tab1.appendChild(tb);
+    });
+
+    h1j.appendChild(tab1);
+    hojas.appendChild(h1j);
+
+    // ── Hoja 2: la del tío. Pedido entero por proveedor, con espacio para
+    //    corregir a mano en el mercado. Es el insumo del cierre.
+    var h2j = el("section", "hoja");
+    var enc2 = el("div", "hojaEnc");
+    var t2 = el("div", "hojaTit");
+    t2.appendChild(el("strong", null, "PEDIDO TOTAL"));
+    t2.appendChild(el("span", "hojaFecha", "Viernes 7 de agosto"));
+    enc2.appendChild(t2);
+    enc2.appendChild(el("div", "hojaSub",
+      "Verdulería + Súper Mágico · las dos últimas columnas se llenan a mano en el mercado"));
+    h2j.appendChild(enc2);
+
+    var tab2 = el("table", "tabla");
+    var th2 = document.createElement("thead");
+    var tr2 = document.createElement("tr");
+    [["Artículo",""],["Verd.","num"],["Mág.","num"],["Total","num"],
+     ["Compré","escribir"],["Precio","escribir"]]
+      .forEach(function (c) {
+        var th = document.createElement("th");
+        if (c[1]) th.className = c[1];
+        th.textContent = c[0];
+        tr2.appendChild(th);
+      });
+    th2.appendChild(tr2);
+    tab2.appendChild(th2);
+
+    var conPedido = enLista().filter(function (it) { return lin(it).pido + lin(it).mag > 0; });
+    var grupos = provsOrdenados().map(function (pr) {
+      return { titulo: pr.nombre, sub: pr.tel,
+        items: conPedido.filter(function (it) { return lin(it).prov === pr.id; }) };
+    });
+    grupos.push({ titulo: "Sin proveedor", sub: "",
+      items: conPedido.filter(function (it) { return !lin(it).prov; }) });
+
+    grupos.filter(function (g) { return g.items.length; }).forEach(function (g) {
+      var tb = document.createElement("tbody");
+
+      var trG = document.createElement("tr");
+      trG.className = "grupo";
+      var tdG = document.createElement("td");
+      tdG.colSpan = 6;
+      tdG.appendChild(el("strong", null, g.titulo));
+      if (g.sub) tdG.appendChild(el("span", "tel", "  " + g.sub));
+      tdG.appendChild(el("span", "cuantos", g.items.length +
+        (g.items.length === 1 ? " artículo" : " artículos")));
+      trG.appendChild(tdG);
+      tb.appendChild(trG);
+
+      g.items.forEach(function (it) {
+        var tr = document.createElement("tr");
+
+        var tdA = document.createElement("td");
+        tdA.className = "art";
+        tdA.appendChild(document.createTextNode(it.nombre));
+        tdA.appendChild(el("span", "uniCol", " " + PLURAL[it.unidad][1]));
+        tr.appendChild(tdA);
+
+        [lin(it).pido, lin(it).mag].forEach(function (n) {
+          var td = document.createElement("td");
+          td.className = "num" + (n === 0 ? " nada" : "");
+          td.textContent = n === 0 ? "–" : String(n);
+          tr.appendChild(td);
+        });
+
+        var tdT = document.createElement("td");
+        tdT.className = "num grande";
+        tdT.textContent = String(lin(it).pido + lin(it).mag);
+        tr.appendChild(tdT);
+
+        var tdE1 = document.createElement("td");
+        tdE1.className = "escribir";
+        tr.appendChild(tdE1);
+        var tdE2 = document.createElement("td");
+        tdE2.className = "escribir";
+        tr.appendChild(tdE2);
+
+        tb.appendChild(tr);
+      });
+      tab2.appendChild(tb);
+    });
+
+    h2j.appendChild(tab2);
+    hojas.appendChild(h2j);
+
+    p.appendChild(hojas);
+    return p;
+  }
+
+  // ── render
+
+  var PANTALLAS = {
+    contar: pantallaContar, magico: pantallaMagico,
+    pedidos: pantallaPedidos, pedido: pantallaPedido, imprimir: pantallaImprimir,
+    arts: pantallaArticulos, provs: pantallaProveedores, cats: pantallaCategorias
+  };
+
+  var VISTAS_TIO = [
+    ["pedidos", "Pedidos"],
+    ["arts",    "Artículos"],
+    ["cats",    "Categorías"],
+    ["provs",   "Proveedores"]
+  ];
+
+  // "pedido" e "imprimir" no son pestañas: se entra desde un pedido y se
+  // vuelve con el enlace de arriba. Igual dejan marcada la pestaña Pedidos.
+  function pintarSubnav() {
+    subnav.textContent = "";
+    if (rol !== "tio") { subnav.hidden = true; return; }
+    subnav.hidden = false;
+    var dentroDeUnPedido = vistaTio === "pedido" || vistaTio === "imprimir";
+    VISTAS_TIO.forEach(function (v) {
+      var b = el("button", null, v[1]);
+      b.type = "button";
+      var activo = v[0] === vistaTio || (dentroDeUnPedido && v[0] === "pedidos");
+      b.setAttribute("aria-pressed", String(activo));
+      b.addEventListener("click", function () {
+        vistaTio = v[0];
+        render();
+      });
+      subnav.appendChild(b);
+    });
+  }
+
+  function render() {
+    var scroll = 0;
+    var vieja = pantalla.querySelector(".lista");
+    if (vieja) scroll = vieja.scrollTop;
+    pintarSubnav();
+    pantalla.textContent = "";
+    var nueva = PANTALLAS[clave()]();
+    // la clase la declara la pantalla, no la clave de la vista: de eso
+    // dependen las columnas de la grilla
+    pantalla.className = nueva.className;
+    while (nueva.firstChild) pantalla.appendChild(nueva.firstChild);
+    var l = pantalla.querySelector(".lista");
+    if (l) l.scrollTop = scroll;
+  }
+
+  function renderLista() {
+    var vieja = pantalla.querySelector(".lista");
+    if (!vieja) return;
+    var foco = document.activeElement;
+    var esBuscador = foco && foco.classList && foco.classList.contains("buscar");
+    var valor = esBuscador ? foco.value : null;
+    var nuevaLista = PANTALLAS[clave()]().querySelector(".lista");
+    vieja.parentNode.replaceChild(nuevaLista, vieja);
+    if (esBuscador) {
+      var b = pantalla.querySelector(".buscar");
+      if (b) { b.value = valor; b.focus(); }
+    }
+  }
+
+  function refrescarPie() {
+    var pieViejo = pantalla.querySelector(".bottom");
+    if (!pieViejo) return;
+    var nota = pieViejo.querySelector(".nota");
+    var textoNota = nota ? nota.textContent : "";
+    var nuevo = PANTALLAS[clave()]().querySelector(".bottom");
+    if (!nuevo) return;
+    if (textoNota) nuevo.querySelector(".nota").textContent = textoNota;
+    pieViejo.parentNode.replaceChild(nuevo, pieViejo);
+  }
+
+  var botonesRol = document.querySelectorAll(".roles button[data-rol]");
+  Array.prototype.forEach.call(botonesRol, function (b) {
+    b.addEventListener("click", function () {
+      rol = b.getAttribute("data-rol");
+      if (rol === "tio") vistaTio = "pedidos";
+      Array.prototype.forEach.call(botonesRol, function (o) {
+        o.setAttribute("aria-pressed", String(o === b));
+      });
+      render();
+    });
+  });
+
+  if (mqAngosto.addEventListener) mqAngosto.addEventListener("change", render);
+  else if (mqAngosto.addListener) mqAngosto.addListener(render);
+
+  render();
+})();
+</script>
