@@ -638,13 +638,20 @@
     max-width: 190mm; margin: 0 auto 22px;
     padding: 14mm 12mm;
     box-shadow: 0 1px 3px rgba(0,0,0,0.16), 0 8px 24px rgba(0,0,0,0.10);
-    font-family: var(--sans);
+
+    /* Fuentes REALES, no las de sistema. -apple-system y ui-monospace son
+       palabras clave de la UI del sistema: varios motores de impresion no las
+       pueden incrustar en el PDF y dejan el texto invisible. Helvetica y
+       Courier estan en cualquier pipeline de impresion. */
+    --hoja-sans: Helvetica, Arial, sans-serif;
+    --hoja-mono: "Courier New", Courier, monospace;
+    font-family: var(--hoja-sans);
   }
 
   .hojaEnc { border-bottom: 2px solid #111; padding-bottom: 5px; margin-bottom: 7px; }
   .hojaTit { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
   .hojaTit strong { font-size: 16px; font-weight: 700; letter-spacing: 0.02em; }
-  .hojaFecha { font-size: 12px; font-weight: 600; }
+  .hojaFecha { font-size: 12px; font-weight: 700; }
   .hojaLinea {
     display: flex; align-items: center; justify-content: space-between;
     gap: 10px; margin-top: 5px;
@@ -663,7 +670,7 @@
 
   .tabla { width: 100%; border-collapse: collapse; table-layout: fixed; }
   .tabla th {
-    font-family: var(--mono); font-size: 9px; font-weight: 700;
+    font-family: var(--hoja-mono); font-size: 9px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.06em;
     text-align: left; color: #111;
     border-bottom: 1.2px solid #111;
@@ -677,13 +684,17 @@
     padding: 3.5px 4px; border-bottom: 0.5px solid #C9C9C9;
     font-size: 11.5px; vertical-align: middle;
   }
+  /* pesos estandar unicamente: 650 es un peso de fuente variable y los
+     motores de impresion que no lo pueden sintetizar no dibujan nada */
   .tabla td.art {
-    font-weight: 650; font-size: 11.5px; line-height: 1.15;
+    font-weight: 700; font-size: 11.5px; line-height: 1.15;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .tabla td.art .uniCol { font-weight: 400; font-size: 9px; color: #555; }
+  /* sin font-variant-numeric: es una feature OpenType que puede hacer
+     desaparecer los digitos al imprimir. Courier ya alinea, es monoespaciada. */
   .tabla td.num {
-    font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 11.5px;
+    font-family: var(--hoja-mono); font-size: 11.5px;
   }
   .tabla td.num.grande { font-size: 13.5px; font-weight: 700; }
   .tabla td.num.nada { color: #AAA; }
@@ -712,7 +723,7 @@
     font-size: 12px; font-weight: 700;
     text-transform: uppercase; letter-spacing: 0.03em;
   }
-  .tabla tr.grupo .tel { font-family: var(--mono); font-size: 9.5px; color: #333; }
+  .tabla tr.grupo .tel { font-family: var(--hoja-mono); font-size: 9.5px; color: #333; }
   .tabla tr.grupo .cuantos { float: right; font-size: 9px; color: #666; }
 
   :is(button, input, select):focus-visible {
