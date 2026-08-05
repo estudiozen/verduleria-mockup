@@ -641,61 +641,79 @@
     font-family: var(--sans);
   }
 
-  .hojaEnc { border-bottom: 2px solid #111; padding-bottom: 7px; margin-bottom: 10px; }
+  .hojaEnc { border-bottom: 2px solid #111; padding-bottom: 5px; margin-bottom: 7px; }
   .hojaTit { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
-  .hojaTit strong { font-size: 19px; font-weight: 700; letter-spacing: 0.02em; }
-  .hojaFecha { font-size: 13.5px; font-weight: 600; }
-  .hojaBanda {
-    display: inline-block; margin-top: 7px;
-    font-size: 14px; font-weight: 700; letter-spacing: 0.06em;
-    padding: 3px 9px; border: 2px solid #111;
+  .hojaTit strong { font-size: 16px; font-weight: 700; letter-spacing: 0.02em; }
+  .hojaFecha { font-size: 12px; font-weight: 600; }
+  .hojaLinea {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; margin-top: 5px;
   }
-  .hojaSub { font-size: 11.5px; margin-top: 6px; color: #444; }
+  .hojaBanda {
+    display: inline-block;
+    font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em;
+    padding: 2px 7px; border: 1.5px solid #111;
+  }
+  .hojaSub { font-size: 10px; color: #444; margin-top: 4px; }
+  .hojaLinea .hojaSub { margin-top: 0; }
 
-  .tabla { width: 100%; border-collapse: collapse; }
+  /* dos columnas: es lo que hace que cada hoja entre en una sola A4 */
+  .cols { display: flex; gap: 7mm; align-items: flex-start; }
+  .col { flex: 1 1 0; min-width: 0; }
+
+  .tabla { width: 100%; border-collapse: collapse; table-layout: fixed; }
   .tabla th {
-    font-family: var(--mono); font-size: 9.5px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.09em;
+    font-family: var(--mono); font-size: 9px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.06em;
     text-align: left; color: #111;
-    border-bottom: 1.5px solid #111;
-    padding: 5px 6px;
+    border-bottom: 1.2px solid #111;
+    padding: 3px 4px;
   }
   .tabla th.num, .tabla td.num { text-align: right; }
   .tabla th.escribir, .tabla td.escribir { text-align: center; }
-  .tabla th.tick, .tabla td.tick { text-align: center; width: 20mm; }
+  .tabla th.tick, .tabla td.tick { text-align: center; }
 
   .tabla td {
-    padding: 6px; border-bottom: 1px solid #C9C9C9;
-    font-size: 13px; vertical-align: middle;
+    padding: 3.5px 4px; border-bottom: 0.5px solid #C9C9C9;
+    font-size: 11.5px; vertical-align: middle;
   }
-  .tabla td.art { font-weight: 650; font-size: 13.5px; }
-  .tabla td.art .uniCol { font-weight: 400; font-size: 11px; color: #555; }
+  .tabla td.art {
+    font-weight: 650; font-size: 11.5px; line-height: 1.15;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .tabla td.art .uniCol { font-weight: 400; font-size: 9px; color: #555; }
   .tabla td.num {
-    font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 13px;
+    font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 11.5px;
   }
-  .tabla td.num.grande { font-size: 15px; font-weight: 700; }
-  .tabla td.num.nada { color: #999; }
-  .tabla td.puesto { font-size: 12.5px; }
+  .tabla td.num.grande { font-size: 13.5px; font-weight: 700; }
+  .tabla td.num.nada { color: #AAA; }
+
+  /* anchos: le doy el espacio a lo que se escribe a mano */
+  .tabla.h1 th.tick, .tabla.h1 td.tick { width: 9mm; }
+  /* nowrap: si no, "12 unidades" parte en dos y desalinea el renglon */
+  .tabla.h1 th.num,  .tabla.h1 td.num  { width: 27mm; white-space: nowrap; }
+  .tabla.h2 th.num,  .tabla.h2 td.num  { width: 6.5mm; }
+  .tabla.h2 th.escribir, .tabla.h2 td.escribir { width: 13.5mm; }
 
   /* casilla para tildar lo que ya cargó */
   .casilla {
-    display: inline-block; width: 15px; height: 15px;
-    border: 1.5px solid #111;
+    display: inline-block; width: 11px; height: 11px;
+    border: 1.2px solid #111;
   }
   /* columnas en blanco: se escriben a mano en el mercado */
-  .tabla td.escribir { border-left: 1px solid #C9C9C9; min-width: 18mm; }
+  .tabla td.escribir { border-left: 0.5px solid #C9C9C9; }
 
   .tabla tr.grupo td {
-    padding: 9px 6px 4px;
-    border-bottom: 1.5px solid #111;
-    font-size: 12.5px;
+    padding: 7px 4px 2px;
+    border-bottom: 1.2px solid #111;
+    font-size: 11px;
   }
   .tabla tr.grupo strong {
-    font-size: 13.5px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.05em;
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.03em;
   }
-  .tabla tr.grupo .tel { font-family: var(--mono); font-size: 11.5px; color: #333; }
-  .tabla tr.grupo .cuantos { float: right; font-size: 11px; color: #555; }
+  .tabla tr.grupo .tel { font-family: var(--mono); font-size: 9.5px; color: #333; }
+  .tabla tr.grupo .cuantos { float: right; font-size: 9px; color: #666; }
 
   :is(button, input, select):focus-visible {
     outline: 2px solid var(--acento); outline-offset: 1px; position: relative; z-index: 1;
@@ -704,7 +722,7 @@
   /* ─────────── impresión ─────────── */
 
   @media print {
-    @page { size: A4 portrait; margin: 12mm; }
+    @page { size: A4 portrait; margin: 10mm; }
 
     /* la app es position:fixed, y eso imprime solo la primera página */
     .app { position: static; display: block; height: auto; background: #fff; }
@@ -716,13 +734,11 @@
       max-width: none; margin: 0; padding: 0;
       box-shadow: none;
       break-after: page;
+      break-inside: avoid;    /* cada hoja es UNA página, no se parte */
     }
     .hoja:last-child { break-after: auto; }
 
-    /* que el encabezado de la tabla se repita en cada página */
-    .tabla thead { display: table-header-group; }
     .tabla tr { break-inside: avoid; }
-    .tabla tr.grupo { break-after: avoid; }
     .hojaEnc { break-after: avoid; }
   }
   @media (prefers-reduced-motion: reduce) { .barra i { transition: none; } }
@@ -2654,6 +2670,72 @@
 
     var hojas = el("main", "lista hojas");
 
+    // Reparte los grupos en dos columnas para que la hoja entre en una A4.
+    // Cuenta encabezados de grupo como renglones, y si el corte cae justo en
+    // un encabezado lo baja a la segunda columna para no dejarlo huérfano.
+    function partirEnDos(grupos) {
+      var plano = [];
+      grupos.forEach(function (g) {
+        plano.push({ tipo: "grupo", g: g });
+        g.items.forEach(function (it) { plano.push({ tipo: "fila", it: it, g: g }); });
+      });
+      var corte = Math.ceil(plano.length / 2);
+      if (plano[corte - 1] && plano[corte - 1].tipo === "grupo") corte--;
+      var col1 = plano.slice(0, corte);
+      var col2 = plano.slice(corte);
+      // si la segunda columna arranca cortando un grupo, repetir el encabezado
+      if (col2.length && col2[0].tipo === "fila") {
+        col2 = [{ tipo: "grupo", g: col2[0].g, sigue: true }].concat(col2);
+      }
+      return [col1, col2];
+    }
+
+    // Arma una hoja de dos columnas a partir de los grupos y un renderizador
+    // de fila. `cols` describe el encabezado de la tabla.
+    function hojaDosColumnas(clase, grupos, cols, hacerCeldas) {
+      var cont = el("div", "cols");
+      partirEnDos(grupos).forEach(function (items) {
+        var col = el("div", "col");
+        if (!items.length) { cont.appendChild(col); return; }
+
+        var tab = el("table", "tabla " + clase);
+        var thead = document.createElement("thead");
+        var trh = document.createElement("tr");
+        cols.forEach(function (c) {
+          var th = document.createElement("th");
+          if (c[1]) th.className = c[1];
+          th.textContent = c[0];
+          trh.appendChild(th);
+        });
+        thead.appendChild(trh);
+        tab.appendChild(thead);
+
+        var tb = document.createElement("tbody");
+        items.forEach(function (item) {
+          if (item.tipo === "grupo") {
+            var trG = document.createElement("tr");
+            trG.className = "grupo";
+            var tdG = document.createElement("td");
+            tdG.colSpan = cols.length;
+            tdG.appendChild(el("strong", null, item.g.titulo));
+            if (item.g.sub) tdG.appendChild(el("span", "tel", " " + item.g.sub));
+            if (item.sigue) tdG.appendChild(el("span", "cuantos", "sigue"));
+            else tdG.appendChild(el("span", "cuantos", String(item.g.items.length)));
+            trG.appendChild(tdG);
+            tb.appendChild(trG);
+          } else {
+            var tr = document.createElement("tr");
+            hacerCeldas(tr, item.it);
+            tb.appendChild(tr);
+          }
+        });
+        tab.appendChild(tb);
+        col.appendChild(tab);
+        cont.appendChild(col);
+      });
+      return cont;
+    }
+
     // ── Hoja 1: la del changador. Solo lo del Mágico, que va adelante.
     var delMagico = enLista().filter(function (it) { return lin(it).mag > 0; });
     var h1j = el("section", "hoja");
@@ -2661,49 +2743,27 @@
     var enc1 = el("div", "hojaEnc");
     var t1 = el("div", "hojaTit");
     t1.appendChild(el("strong", null, "PEDIDO SÚPER MÁGICO"));
-    t1.appendChild(el("span", "hojaFecha", "Viernes 7 de agosto"));
+    t1.appendChild(el("span", "hojaFecha", fechaLarga(pedidoActual.fecha)));
     enc1.appendChild(t1);
-    enc1.appendChild(el("div", "hojaBanda", "VA ADELANTE DEL CAMIÓN"));
-    enc1.appendChild(el("div", "hojaSub",
+    var linea1 = el("div", "hojaLinea");
+    linea1.appendChild(el("span", "hojaBanda", "VA ADELANTE DEL CAMIÓN"));
+    linea1.appendChild(el("span", "hojaSub",
       delMagico.length + " artículos · marcar a medida que se carga"));
+    enc1.appendChild(linea1);
     h1j.appendChild(enc1);
-
-    var tab1 = el("table", "tabla");
-    var th1 = document.createElement("thead");
-    var tr1 = document.createElement("tr");
-    [["Cargado","tick"],["Artículo",""],["Cantidad","num"]]
-      .forEach(function (c) {
-        var th = document.createElement("th");
-        if (c[1]) th.className = c[1];
-        th.textContent = c[0];
-        tr1.appendChild(th);
-      });
-    th1.appendChild(tr1);
-    tab1.appendChild(th1);
 
     // agrupada por puesto: el changador recorre puesto por puesto levantando
     var porPuesto = provsOrdenados().map(function (pr) {
       return { titulo: pr.nombre,
         items: delMagico.filter(function (it) { return lin(it).prov === pr.id; }) };
-    });
-    porPuesto.push({ titulo: "Sin puesto asignado",
-      items: delMagico.filter(function (it) { return !lin(it).prov; }) });
+    }).filter(function (g) { return g.items.length; });
+    var sinPuesto = delMagico.filter(function (it) { return !lin(it).prov; });
+    if (sinPuesto.length) porPuesto.push({ titulo: "Sin puesto asignado", items: sinPuesto });
 
-    porPuesto.filter(function (g) { return g.items.length; }).forEach(function (g) {
-      var tb = document.createElement("tbody");
-
-      var trG = document.createElement("tr");
-      trG.className = "grupo";
-      var tdG = document.createElement("td");
-      tdG.colSpan = 3;
-      tdG.appendChild(el("strong", null, g.titulo));
-      tdG.appendChild(el("span", "cuantos", g.items.length +
-        (g.items.length === 1 ? " artículo" : " artículos")));
-      trG.appendChild(tdG);
-      tb.appendChild(trG);
-
-      g.items.forEach(function (it) {
-        var tr = document.createElement("tr");
+    h1j.appendChild(hojaDosColumnas("h1",
+      porPuesto,
+      [["✓","tick"],["Artículo",""],["Cant.","num"]],
+      function (tr, it) {
         var tdT = document.createElement("td");
         tdT.className = "tick";
         tdT.appendChild(el("span", "casilla"));
@@ -2716,12 +2776,7 @@
         tdC.className = "num grande";
         tdC.textContent = lin(it).mag + " " + uni(it, lin(it).mag);
         tr.appendChild(tdC);
-        tb.appendChild(tr);
-      });
-      tab1.appendChild(tb);
-    });
-
-    h1j.appendChild(tab1);
+      }));
     hojas.appendChild(h1j);
 
     // ── Hoja 2: la del tío. Pedido entero por proveedor, con espacio para
@@ -2730,58 +2785,33 @@
     var enc2 = el("div", "hojaEnc");
     var t2 = el("div", "hojaTit");
     t2.appendChild(el("strong", null, "PEDIDO TOTAL"));
-    t2.appendChild(el("span", "hojaFecha", "Viernes 7 de agosto"));
+    t2.appendChild(el("span", "hojaFecha", fechaLarga(pedidoActual.fecha)));
     enc2.appendChild(t2);
     enc2.appendChild(el("div", "hojaSub",
-      "Verdulería + Súper Mágico · las dos últimas columnas se llenan a mano en el mercado"));
+      "Verdulería + Súper Mágico · Compré y Precio se llenan a mano en el mercado"));
     h2j.appendChild(enc2);
-
-    var tab2 = el("table", "tabla");
-    var th2 = document.createElement("thead");
-    var tr2 = document.createElement("tr");
-    [["Artículo",""],["Verd.","num"],["Mág.","num"],["Total","num"],
-     ["Compré","escribir"],["Precio","escribir"]]
-      .forEach(function (c) {
-        var th = document.createElement("th");
-        if (c[1]) th.className = c[1];
-        th.textContent = c[0];
-        tr2.appendChild(th);
-      });
-    th2.appendChild(tr2);
-    tab2.appendChild(th2);
 
     var conPedido = enLista().filter(function (it) { return lin(it).pido + lin(it).mag > 0; });
     var grupos = provsOrdenados().map(function (pr) {
       return { titulo: pr.nombre, sub: pr.tel,
         items: conPedido.filter(function (it) { return lin(it).prov === pr.id; }) };
-    });
-    grupos.push({ titulo: "Sin proveedor", sub: "",
-      items: conPedido.filter(function (it) { return !lin(it).prov; }) });
+    }).filter(function (g) { return g.items.length; });
+    var sinProv = conPedido.filter(function (it) { return !lin(it).prov; });
+    if (sinProv.length) grupos.push({ titulo: "Sin proveedor", sub: "", items: sinProv });
 
-    grupos.filter(function (g) { return g.items.length; }).forEach(function (g) {
-      var tb = document.createElement("tbody");
-
-      var trG = document.createElement("tr");
-      trG.className = "grupo";
-      var tdG = document.createElement("td");
-      tdG.colSpan = 6;
-      tdG.appendChild(el("strong", null, g.titulo));
-      if (g.sub) tdG.appendChild(el("span", "tel", "  " + g.sub));
-      tdG.appendChild(el("span", "cuantos", g.items.length +
-        (g.items.length === 1 ? " artículo" : " artículos")));
-      trG.appendChild(tdG);
-      tb.appendChild(trG);
-
-      g.items.forEach(function (it) {
-        var tr = document.createElement("tr");
-
+    h2j.appendChild(hojaDosColumnas("h2",
+      grupos,
+      [["Artículo",""],["V","num"],["M","num"],["Tot","num"],
+       ["Compré","escribir"],["Precio","escribir"]],
+      function (tr, it) {
+        var li = lin(it);
         var tdA = document.createElement("td");
         tdA.className = "art";
         tdA.appendChild(document.createTextNode(it.nombre));
         tdA.appendChild(el("span", "uniCol", " " + PLURAL[it.unidad][1]));
         tr.appendChild(tdA);
 
-        [lin(it).pido, lin(it).mag].forEach(function (n) {
+        [li.pido, li.mag].forEach(function (n) {
           var td = document.createElement("td");
           td.className = "num" + (n === 0 ? " nada" : "");
           td.textContent = n === 0 ? "–" : String(n);
@@ -2790,22 +2820,12 @@
 
         var tdT = document.createElement("td");
         tdT.className = "num grande";
-        tdT.textContent = String(lin(it).pido + lin(it).mag);
+        tdT.textContent = String(li.pido + li.mag);
         tr.appendChild(tdT);
 
-        var tdE1 = document.createElement("td");
-        tdE1.className = "escribir";
-        tr.appendChild(tdE1);
-        var tdE2 = document.createElement("td");
-        tdE2.className = "escribir";
-        tr.appendChild(tdE2);
-
-        tb.appendChild(tr);
-      });
-      tab2.appendChild(tb);
-    });
-
-    h2j.appendChild(tab2);
+        tr.appendChild(el("td", "escribir"));
+        tr.appendChild(el("td", "escribir"));
+      }));
     hojas.appendChild(h2j);
 
     p.appendChild(hojas);
